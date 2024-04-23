@@ -35,6 +35,7 @@ public class QuizzerApplication {
 			QuizzRepository quizzRepository, StatusRepository statusRepository) {
 		return (args) -> {
 			log.info("save a couple of quizz");
+			/* 
 
 			// Category example data
 			Category category1 = new Category("History", "Knowledge about world's history");
@@ -123,7 +124,7 @@ public class QuizzerApplication {
 			questionRepository.save(question8);
 			questionRepository.save(question9);
 
+*/
 		};
 	}
-
 }
