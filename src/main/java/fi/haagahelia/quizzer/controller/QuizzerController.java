@@ -18,6 +18,8 @@ import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class QuizzerController {
@@ -124,4 +126,11 @@ public class QuizzerController {
         categoryRepository.save(category);
         return "redirect:/quizzlist";
     }
+
+    @GetMapping("/categorylist")
+    public String showCat(Model model) {
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "categorylist";
+    }
+    
 }
