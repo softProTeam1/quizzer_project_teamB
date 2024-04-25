@@ -77,7 +77,10 @@ public class Quizz {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm");
         return formatter.format(zdt);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 36157fbe7cdf01775fe0c34d7ecdec64da81641d
     @JsonIgnore
     public List<Question> getQuestion() {
         return questions;

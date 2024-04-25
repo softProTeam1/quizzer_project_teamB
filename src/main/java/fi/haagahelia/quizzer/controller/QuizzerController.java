@@ -127,10 +127,10 @@ public class QuizzerController {
         return "redirect:/quizzlist";
     }
 
+    // show all category
     @GetMapping("/categorylist")
     public String showCat(Model model) {
         model.addAttribute("categories", categoryRepository.findAll());
         return "categorylist";
     }
-    
 }
