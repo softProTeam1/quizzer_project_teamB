@@ -1,4 +1,3 @@
-/* 
 package fi.haagahelia.quizzer.controller;
 
 import java.util.List;
@@ -15,38 +14,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.qos.logback.core.model.Model;
 import fi.haagahelia.quizzer.dto.CreateMessageDto;
 import fi.haagahelia.quizzer.model.Message;
+import fi.haagahelia.quizzer.model.Quizz;
+import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.MessageRepository;
+import fi.haagahelia.quizzer.repository.QuizzRepository;
+import fi.haagahelia.quizzer.repository.StatusRepository;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
-@RequestMapping("/api/messages")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*")
-public class MessageRestController {
-	@Autowired
-	private MessageRepository messageRepository;
+public class QuizzerRestController {
 
-	@GetMapping("")
-	public List<Message> getAllMessages() {
-		return messageRepository.findAll();
-	}
+    @Autowired
+    private QuizzRepository quizzRepository;
+    @Autowired
+    private StatusRepository statusRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-	@GetMapping("/{id}")
-	public Message getMessageById(@PathVariable Long id) {
-		return messageRepository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Message with id " + id + " does not exist"));
-	}
+    // show all quizzes
+    @GetMapping("/quizzlist")
+    public List<Quizz> showAllQuizz() {
+        return (List<Quizz>) quizzRepository.findAll();
+    }
+    
 
-	@PostMapping("")
-	public Message createMessage(@Valid @RequestBody CreateMessageDto message, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					bindingResult.getAllErrors().get(0).getDefaultMessage());
-		}
-
-		Message newMessage = new Message(message.getContent());
-		return messageRepository.save(newMessage);
-	}
 }
-*/

@@ -1,4 +1,5 @@
 package fi.haagahelia.quizzer.model;
+
 import java.time.Instant;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,9 +15,6 @@ import jakarta.persistence.OneToMany;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-
-
 
 @Entity
 public class Quizz {
@@ -79,6 +77,8 @@ public class Quizz {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm");
         return formatter.format(zdt);
     }
+
+    @JsonIgnore
     public List<Question> getQuestion() {
         return questions;
     }
@@ -108,6 +108,7 @@ public class Quizz {
         this.creationTime = creationTime;
     }
 
+    @JsonIgnore
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
@@ -120,6 +121,7 @@ public class Quizz {
         this.category = category;
     }
 
+    @JsonIgnore
     @Override
     public String toString() {
         if (this.status == null && this.category == null) {
