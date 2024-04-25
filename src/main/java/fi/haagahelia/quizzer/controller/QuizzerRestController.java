@@ -42,7 +42,6 @@ public class QuizzerRestController {
     @GetMapping("/quizzlist")
     public List<Quizz> showAllQuizz() {
         return (List<Quizz>) quizzRepository.findAll();
-    }
-    
+    } 
 
 }
