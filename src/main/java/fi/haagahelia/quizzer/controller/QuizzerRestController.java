@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.haagahelia.quizzer.model.Quizz;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -39,6 +40,7 @@ public class QuizzerRestController {
         return (List<Quizz>) quizzRepository.findAll();
     }
 
+    @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
     @GetMapping("/publishedquizz")
     public List<Quizz> getPublishedQuizzNewestToOldest() {
 
@@ -53,6 +55,7 @@ public class QuizzerRestController {
         return publishedQuizzes;
     }
 
+    @Operation(summary = "Get all questions", description = "Returns all questions")
     @GetMapping("/questionlist")
     public List<Question> getQuestionList() {
         // Return question list
