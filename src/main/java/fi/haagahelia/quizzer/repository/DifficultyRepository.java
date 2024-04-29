@@ -1,12 +1,11 @@
 package fi.haagahelia.quizzer.repository;
 
+import fi.haagahelia.quizzer.model.Difficulty;
 import org.springframework.data.repository.CrudRepository;
 
-import fi.haagahelia.quizzer.model.Difficulty;
-
-import java.util.List;
+import java.util.Optional;
 
 public interface DifficultyRepository extends CrudRepository<Difficulty, Long> {
-    List<Difficulty> findByLevel(String level); 
+    Optional<Difficulty> findByLevel(String level);
 
 }

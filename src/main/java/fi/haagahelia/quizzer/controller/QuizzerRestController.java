@@ -1,21 +1,24 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import fi.haagahelia.quizzer.model.Question;
+import fi.haagahelia.quizzer.model.Category;
+import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
-import fi.haagahelia.quizzer.repository.*;
+import fi.haagahelia.quizzer.repository.CategoryRepository;
+import fi.haagahelia.quizzer.repository.QuestionRepository;
+import fi.haagahelia.quizzer.repository.QuizzRepository;
+import fi.haagahelia.quizzer.repository.StatusRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import fi.haagahelia.quizzer.model.Quizz;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -55,19 +58,28 @@ public class QuizzerRestController {
 
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
     @GetMapping("/publishedquizz")
-    public List<Quizz> getPublishedQuizzNewestToOldest() {
-
+    public ResponseEntity<?> getPublishedQuizzNewestToOldest(@RequestParam Long categoryId) {
+        List<Quizz> publishedQuizzes;
         // Fetch the list of quizzes with a status of true (published)
         Status status = statusRepository.findByStatus(true);
-        List<Quizz> publishedQuizzes = quizzRepository.findByStatus(status);
+        if (categoryId == null) {
+            List<Quizz> publishedQuizzesNotCategory = quizzRepository.findByStatus(status);
+            // Sort the list by creation time in descending order
+            Collections.sort(publishedQuizzesNotCategory, Comparator.comparing(Quizz::getCreationTime).reversed());
+            publishedQuizzes = publishedQuizzesNotCategory;
+        } else {
+            // Check if the category exists
+            Optional<Category> categoryLookUp = categoryRepository.findById(categoryId);
+            if (categoryLookUp.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Category with the provided ID is not found");
+            }
 
-        // Sort the list by creation time in descending order
-        Collections.sort(publishedQuizzes, Comparator.comparing(Quizz::getCreationTime).reversed());
+            Category category = categoryLookUp.get();
+            // Get published quizzes by category in descending order of creation
+            List<Quizz> publishedQuizzesWithCategory = quizzRepository.findByStatus(status);
+            publishedQuizzes = quizzRepository.findByCategory(category);
 
-        // Return the sorted list
-        return publishedQuizzes;
+        }
+        return ResponseEntity.ok(publishedQuizzes);
     }
-
-
-
 }
