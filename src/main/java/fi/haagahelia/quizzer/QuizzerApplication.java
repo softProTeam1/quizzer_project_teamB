@@ -36,12 +36,14 @@ public class QuizzerApplication {
 			Category category1 = new Category("History", "Knowledge about world's history");
 			Category category2 = new Category("Culinary", "Knowledge about world's culinary");
 			Category category3 = new Category("Sports", "Knowledge about world's sport");
+			Category category4 = new Category("Music & Movies", "Knowledge about world's music and movies");
 
 			// save example data to category repository
 			categoryRepository.save(category1);
 			log.info(category1.toString());
 			categoryRepository.save(category2);
 			categoryRepository.save(category3);
+			categoryRepository.save(category4);
 
 			// Status data
 			Status status1 = new Status(true);
@@ -62,12 +64,16 @@ public class QuizzerApplication {
 			Quizz quizz3 = new Quizz("History of Vietnam",
 					"A comprehensive quiz about the rich and diverse history of Vietnam. Perfect for history buffs!",
 					status2, category1);
+			Quizz quizz4 = new Quizz("Korean Songs and Dramas",
+					"A comprehensive quiz about the well-known songs and dramas of Korea. Perfect for fans of Korea!",
+					status2, category4);
 
 			// save example data to the db
 			quizzRepository.save(quizz1);
 			log.info(quizz1.toString());
 			quizzRepository.save(quizz2);
 			quizzRepository.save(quizz3);
+			quizzRepository.save(quizz4);
 
 			// Difficulty example data
 			Difficulty difficulty1 = new Difficulty("Easy");

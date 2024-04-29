@@ -9,15 +9,14 @@ import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import fi.haagahelia.quizzer.model.Quizz;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/api")
@@ -40,6 +39,20 @@ public class QuizzerRestController {
         return (List<Quizz>) quizzRepository.findAll();
     }
 
+    @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
+    @GetMapping("/quizz/{id}")
+    public ResponseEntity<?> getQuizById(@PathVariable Long id) {
+        return quizzRepository.findById(id)
+                .map(quiz -> {
+                    if (quiz.getStatus() != null && quiz.getStatus().getStatus()) {
+                        return ResponseEntity.ok(quiz);
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Quiz with the provided ID is not published");
+                    }
+                })
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Quiz with the provided ID does not exist"));
+    }
+
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
     @GetMapping("/publishedquizz")
     public List<Quizz> getPublishedQuizzNewestToOldest() {
@@ -55,11 +68,6 @@ public class QuizzerRestController {
         return publishedQuizzes;
     }
 
-    @Operation(summary = "Get all questions", description = "Returns all questions")
-    @GetMapping("/questionlist")
-    public List<Question> getQuestionList() {
-        // Return question list
-        return (List<Question>) questionRepository.findAll();
-    }
+
 
 }
