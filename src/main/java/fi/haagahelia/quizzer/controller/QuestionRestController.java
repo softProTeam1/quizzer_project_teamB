@@ -1,5 +1,6 @@
 package fi.haagahelia.quizzer.controller;
 
+import fi.haagahelia.quizzer.model.Difficulty;
 import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -39,6 +41,9 @@ public class QuestionRestController {
             @RequestParam("quizzId") Long quizzId,
             @RequestParam(required = false) String level) {
 
+        if (quizzId == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         // Retrieve quiz and check if it exists
         Optional<Quizz> quizLookup = quizzRepository.findById(quizzId);
         if (quizLookup.isEmpty()) {
@@ -55,12 +60,17 @@ public class QuestionRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Quiz with id " + quizzId + " is not published");
         }
-
-        Optional<Question> questions;
-        questions = questionRepository.findById(quizzId);
+        //question of one quizz
+        List<Question> questions = questionRepository.findByQuizzQuizzId(quizzId);
 
         //get quiz with level
+        if (level != null) {
 
+            Difficulty difficulty = difficultyRepository.findByLevel(level);
+            
+            List<Question> questionsByLevel = questionRepository.findByQuizzQuizzIdAndDifficulty(quizzId, difficulty);
+            return ResponseEntity.ok(questionsByLevel);
+        }
 
         return ResponseEntity.ok(questions);
 
