@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -58,26 +56,28 @@ public class QuizzerRestController {
 
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
     @GetMapping("/publishedquizz")
-    public ResponseEntity<?> getPublishedQuizzNewestToOldest(@RequestParam Long categoryId) {
+    public ResponseEntity<?> getPublishedQuizzNewestToOldest(@RequestParam(required = false) Long categoryId) {
         List<Quizz> publishedQuizzes;
         // Fetch the list of quizzes with a status of true (published)
         Status status = statusRepository.findByStatus(true);
         if (categoryId == null) {
             List<Quizz> publishedQuizzesNotCategory = quizzRepository.findByStatus(status);
             // Sort the list by creation time in descending order
-            Collections.sort(publishedQuizzesNotCategory, Comparator.comparing(Quizz::getCreationTime).reversed());
+            publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed()); // Sort newest to oldest
             publishedQuizzes = publishedQuizzesNotCategory;
         } else {
             // Check if the category exists
             Optional<Category> categoryLookUp = categoryRepository.findById(categoryId);
-            if (categoryLookUp.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Category with the provided ID is not found");
-            }
+            Category category;
 
-            Category category = categoryLookUp.get();
+            if (categoryLookUp.isPresent()) {
+                category = categoryLookUp.get();
+            } else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Category with the provided ID is not found");
+
             // Get published quizzes by category in descending order of creation
-            List<Quizz> publishedQuizzesWithCategory = quizzRepository.findByStatus(status);
-            publishedQuizzes = quizzRepository.findByCategory(category);
+            publishedQuizzes = quizzRepository.findByStatusAndCategory(status, category);
+            publishedQuizzes.sort(Comparator.comparing(Quizz::getCreationTime).reversed());  // Sort newest to oldest
 
         }
         return ResponseEntity.ok(publishedQuizzes);

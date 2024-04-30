@@ -17,4 +17,6 @@ public interface QuizzRepository extends CrudRepository<Quizz, Long> {
 
     Optional<Quizz> findById(Long id);
 
+    List<Quizz> findByStatusAndCategory(Status status, Category category);
+
 }
