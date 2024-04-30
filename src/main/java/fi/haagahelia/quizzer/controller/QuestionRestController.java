@@ -65,9 +65,13 @@ public class QuestionRestController {
 
         //get quiz with level
         if (level != null) {
-
+            if (!level.equals("Easy") && !level.equals("Medium") && !level.equals("Hard")) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Error: Level \"" + level + "\" does not exist.");
+            }
             Difficulty difficulty = difficultyRepository.findByLevel(level);
-            
+
             List<Question> questionsByLevel = questionRepository.findByQuizzQuizzIdAndDifficulty(quizzId, difficulty);
             return ResponseEntity.ok(questionsByLevel);
         }
