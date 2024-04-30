@@ -6,10 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Quizz;
@@ -33,7 +30,7 @@ public class QuizzerController {
 
     // show all quizzes
     @RequestMapping(value = "/quizzlist")
-    public String recipientList(Model model) {
+    public String quizzList(Model model) {
         model.addAttribute("quizzlist", quizzRepository.findAll());
         return "quizzlist";
     }
@@ -113,24 +110,4 @@ public class QuizzerController {
         return "redirect:../quizzlist";
     }
 
-    // add category - Hong
-    @GetMapping(value = "/addCategory")
-    public String addCategory(Model model) {
-        model.addAttribute("category", new Category());
-        return "addCategory";
-    }
-
-    // save category - Hong
-    @PostMapping(value = "/saveCategory")
-    public String saveCategory(Category category) {
-        categoryRepository.save(category);
-        return "redirect:/quizzlist";
-    }
-
-    // show all category
-    @GetMapping("/categorylist")
-    public String showCat(Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
-        return "categorylist";
-    }
 }
