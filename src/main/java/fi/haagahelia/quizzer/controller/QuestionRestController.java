@@ -47,7 +47,7 @@ public class QuestionRestController {
                     .status(HttpStatus.NOT_FOUND)
                     .body("Error: Quiz with the provided ID does not exist");
         }
-        //get quizz with quizz ID found
+        // get quizz with quizz ID found
         Quizz quizz = quizLookup.get();
 
         Status status = statusRepository.findByStatus(true);
@@ -61,8 +61,8 @@ public class QuestionRestController {
         // Get questions with optional filtering by difficulty
         Optional<Question> questions;
         if (level == null) {
-//         Retrieve all questions if difficulty is not specified
-            questions = questionRepository.findByQuizz(quizz);
+            // Retrieve all questions if difficulty is not specified
+            questions = Optional.empty();
 
         } else {
             Optional<Difficulty> difficultyLookup = difficultyRepository.findByLevel(level);

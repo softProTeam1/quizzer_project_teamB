@@ -11,7 +11,8 @@ import java.util.Optional;
 public interface QuestionRepository extends CrudRepository<Question, Long> {
     List<Question> findByQuestionId(Long quizzId);
 
-    Optional<Question> findByQuizz(Quizz quizz);
+    List<Question> findByQuizzQuizzId(Long quizzId);
 
     Optional<Question> findByQuizzAndDifficulty(Quizz quizz, Difficulty difficulty);
+
 }
