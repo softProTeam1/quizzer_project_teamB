@@ -1,15 +1,9 @@
 package fi.haagahelia.quizzer.controller;
 
-import fi.haagahelia.quizzer.model.Category;
-import fi.haagahelia.quizzer.model.Quizz;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 import fi.haagahelia.quizzer.dto.AnswerRequestDto;
+import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Question;
+import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.QuestionRepository;
@@ -22,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +60,8 @@ public class QuizzerRestController {
 
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
     @GetMapping("/publishedquizz")
-    public ResponseEntity<?> getPublishedQuizzNewestToOldest(@RequestParam(required = false) Long categoryId) {
+    public ResponseEntity<?> getPublishedQuizzNewestToOldest(
+            @RequestParam(required = false) Long categoryId) {
         List<Quizz> publishedQuizzes;
         // Fetch the list of quizzes with a status of true (published)
         Status status = statusRepository.findByStatus(true);
@@ -73,7 +69,7 @@ public class QuizzerRestController {
             List<Quizz> publishedQuizzesNotCategory = quizzRepository.findByStatus(status);
             // Sort the list by creation time in descending order
             publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed()); // Sort newest to
-                                                                                                       // oldest
+            // oldest
             publishedQuizzes = publishedQuizzesNotCategory;
         } else {
             // Check if the category exists

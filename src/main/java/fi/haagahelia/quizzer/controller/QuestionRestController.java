@@ -1,6 +1,5 @@
 package fi.haagahelia.quizzer.controller;
 
-import fi.haagahelia.quizzer.model.Difficulty;
 import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
@@ -37,8 +36,8 @@ public class QuestionRestController {
     // endpoint path /api/quizzlist/{quizzId}/questions/?{difficultyId}
 
     public ResponseEntity<?> getQuizQuestions(
-            @PathVariable("quizzId") Long quizzId,
-            @RequestParam(value = "difficulty", required = false) String level) {
+            @RequestParam("quizzId") Long quizzId,
+            @RequestParam(required = false) String level) {
 
         // Retrieve quiz and check if it exists
         Optional<Quizz> quizLookup = quizzRepository.findById(quizzId);
@@ -52,24 +51,16 @@ public class QuestionRestController {
 
         Status status = statusRepository.findByStatus(true);
         // Check if the quiz is published
-        if (quizz.getStatus() == null || !quizz.getStatus().getStatus()) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("Error: Quiz with the provided ID is not published");
+        if (!quizz.getStatus().getStatus()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Quiz with id " + quizzId + " is not published");
         }
 
-        // Get questions with optional filtering by difficulty
         Optional<Question> questions;
-        if (level == null) {
-            // Retrieve all questions if difficulty is not specified
-            questions = Optional.empty();
+        questions = questionRepository.findById(quizzId);
 
-        } else {
-            Optional<Difficulty> difficultyLookup = difficultyRepository.findByLevel(level);
-            Difficulty difficulty = difficultyLookup.get();
-            // Retrieve questions filtered by difficulty ID
-            questions = questionRepository.findByQuizzAndDifficulty(quizz, difficulty);
-        }
+        //get quiz with level
+
 
         return ResponseEntity.ok(questions);
 
