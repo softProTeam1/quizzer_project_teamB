@@ -32,18 +32,15 @@ public class AnswerRestController {
     @Autowired
     private QuizzRepository quizzRepository;
 
-    @PostMapping("/add")
-    public Answer createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto, BindingResult bindingResult) {
+    @PostMapping("/add/{quizzId}")
+    public Answer createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto, BindingResult bindingResult,@PathVariable Long quizId) {
         // invalid request body
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid request body, answer text cannot be blank");
         }
-        Question question = questionRepository.findById(answerRequestDto.getQuestionId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "question with questionId does not exist"));
-
         // handle quiz id not found
-        Quizz quiz = quizzRepository.findById(question.getQuizz().getQuizzId()).orElseThrow(
+        Quizz quiz = quizzRepository.findById(quizId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "quiz with the quizzId does not exist"));
 
         // handle quizz not publish
