@@ -3,7 +3,9 @@ package fi.haagahelia.quizzer.controller;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
+import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import fi.haagahelia.quizzer.model.Quizz;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.server.ResponseStatusException;
+
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +30,10 @@ public class QuizzerRestController {
     private QuizzRepository quizzRepository;
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     // show all quizzes
     @GetMapping("/quizzlist")
@@ -34,19 +42,17 @@ public class QuizzerRestController {
     }
 
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
-    @GetMapping("/quizz/{id}")
-    public ResponseEntity<?> getQuizById(@PathVariable Long id) {
-        return quizzRepository.findById(id)
-                .map(quiz -> {
-                    if (quiz.getStatus() != null && quiz.getStatus().getStatus()) {
-                        return ResponseEntity.ok(quiz);
-                    } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Error: Quiz with the provided ID is not published");
-                    }
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Error: Quiz with the provided ID does not exist"));
+    @GetMapping("/quizz/{quizzId}")
+    public Quizz getQuizById(@PathVariable Long quizzId) {
+        // get the quizz by quizzId
+        Quizz quiz = quizzRepository.findById(quizzId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Quiz with the provided ID does not exist"));
+        // if the quizz is not publish then throw 400
+        if (!quiz.getStatus().getStatus()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Quiz with the provided ID is not published");
+        }
+
+        return quiz;
     }
 
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
@@ -64,39 +70,6 @@ public class QuizzerRestController {
         return publishedQuizzes;
     }
 
-    /*
-     * @Operation(summary = "Get the all anwers of a quiz", description =
-     * "Returns all anwers of a quiz or an appropriate error message if not found or unpublished"
-     * )
-     * 
-     * @GetMapping("/quizz/{quizzId}/answers")
-     * public ResponseEntity<?> getQuizAnswers(@PathVariable Long quizzId) {
-     * // Check if quiz exists
-     * Optional<Quizz> optionalQuizz = quizzRepository.findById(quizzId);
-     * if (optionalQuizz.isEmpty()) {
-     * return ResponseEntity.status(HttpStatus.NOT_FOUND)
-     * .body("Quiz with id " + quizzId + " does not exist");
-     * }
-     * 
-     * Quizz quizz = optionalQuizz.get();
-     * 
-     * // Check if quiz is published
-     * if (!quizz.getStatus().getStatus()) {
-     * return ResponseEntity.status(HttpStatus.FORBIDDEN)
-     * .body("Quiz with id " + quizzId + " is not published");
-     * }
-     * 
-     * // Get answers for the quiz (send only needed information (DTO))
-     * List<Question> questions = questionRepository.findByQuizzQuizzId(quizzId);
-     * List<AnswerRequestDto> answers = new ArrayList<>();
-     * for (Question question : questions) {
-     * AnswerRequestDto answer = new AnswerRequestDto();
-     * answer.setQuestionId(question.getQuestionId());
-     * answer.setCorrectAnswer(question.getCorrectAnswer());
-     * answers.add(answer);
-     * }
-     * 
-     * return ResponseEntity.ok(answers);
-     * }
-     */
+
+
 }
