@@ -32,7 +32,7 @@ public class AnswerRestController {
     @Autowired
     private QuizzRepository quizzRepository;
 
-    @PostMapping("/add/{quizzId}")
+    @PostMapping("/add/{quizId}")
     public Answer createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto, BindingResult bindingResult,@PathVariable Long quizId) {
         // invalid request body
         if (bindingResult.hasErrors()) {
