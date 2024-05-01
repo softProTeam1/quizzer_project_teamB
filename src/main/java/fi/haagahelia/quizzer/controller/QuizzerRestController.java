@@ -68,6 +68,7 @@ public class QuizzerRestController {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "published quizzes with the provided category id does not exist")
     })
+    @CrossOrigin(origins = "*")
     @GetMapping("/publishedquizz")
     public ResponseEntity<?> getPublishedQuizzNewestToOldest(
             @RequestParam(required = false) Long categoryId) {
