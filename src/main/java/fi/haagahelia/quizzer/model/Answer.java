@@ -19,8 +19,8 @@ public class Answer {
     private boolean correctness;
 
     @ManyToOne
-    @JoinColumn(name = "quizzId")
-    private Quizz quizz;
+    @JoinColumn(name = "questionId")
+    private Question question;
 
     public Answer() {}
 
@@ -41,8 +41,8 @@ public class Answer {
     public boolean getCorrectness(){
         return correctness;
     }
-    public Quizz getQuizz(){
-        return quizz;
+    public Question getQuestion(){
+        return question;
     }
 
 
@@ -57,7 +57,7 @@ public class Answer {
     public void setCorrectness(boolean correctness){
         this.correctness = correctness;
     }
-    public void setQuizz(Quizz quizz){
-        this.quizz = quizz;
+    public void setQuestion(Question question){
+        this.question = question;
     }
 }

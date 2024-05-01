@@ -6,11 +6,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import fi.haagahelia.quizzer.model.Answer;
 import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Difficulty;
 import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
+import fi.haagahelia.quizzer.repository.AnswerRepository;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.DifficultyRepository;
 import fi.haagahelia.quizzer.repository.QuestionRepository;
@@ -28,7 +31,7 @@ public class QuizzerApplication {
 	@Bean
 	public CommandLineRunner DBlinerunner(CategoryRepository categoryRepository,
 			DifficultyRepository difficultyRepository, QuestionRepository questionRepository,
-			QuizzRepository quizzRepository, StatusRepository statusRepository) {
+			QuizzRepository quizzRepository, StatusRepository statusRepository, AnswerRepository answerRepository) {
 		return (args) -> {
 			log.info("save a couple of quizz");
 
@@ -124,6 +127,7 @@ public class QuizzerApplication {
 			questionRepository.save(question7);
 			questionRepository.save(question8);
 			questionRepository.save(question9);
+
 
 		};
 	}
