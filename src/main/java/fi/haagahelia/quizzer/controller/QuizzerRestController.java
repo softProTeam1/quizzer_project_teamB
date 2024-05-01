@@ -58,7 +58,9 @@ public class QuizzerRestController {
                         .body("Error: Quiz with the provided ID does not exist"));
     }
 
-    @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
+    @Operation(summary = "Get all published quizzes",
+            description = "Returns all published quizzes and optional filtered by CategoryId")
+    //http://localhost:8080/api/publishedquizz?categoryId=2
     @GetMapping("/publishedquizz")
     public ResponseEntity<?> getPublishedQuizzNewestToOldest(
             @RequestParam(required = false) Long categoryId) {
