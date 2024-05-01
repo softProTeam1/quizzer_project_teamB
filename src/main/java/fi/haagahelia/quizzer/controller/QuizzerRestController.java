@@ -1,13 +1,9 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-import fi.haagahelia.quizzer.dto.AnswerRequestDto;
-import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +26,6 @@ public class QuizzerRestController {
     private QuizzRepository quizzRepository;
     @Autowired
     private StatusRepository statusRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
 
     // show all quizzes
     @GetMapping("/quizzlist")

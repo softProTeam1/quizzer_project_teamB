@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
-import fi.haagahelia.quizzer.repository.QuestionRepository;
-import fi.haagahelia.quizzer.repository.QuizzRepository;
-import fi.haagahelia.quizzer.repository.StatusRepository;
 
 @RestController
 @RequestMapping("/api/category")

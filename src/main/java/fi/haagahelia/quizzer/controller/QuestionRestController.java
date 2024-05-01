@@ -1,11 +1,8 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import fi.haagahelia.quizzer.model.Question;
-import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fi.haagahelia.quizzer.model.Quizz;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -24,12 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin(origins = "*")
 @Tag(name = "Question", description = "Operations for accessing and managing the questions")
 public class QuestionRestController {
-    @Autowired
-    private QuizzRepository quizzRepository;
-    @Autowired
-    private StatusRepository statusRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
     @Autowired
     private QuestionRepository questionRepository;
 
