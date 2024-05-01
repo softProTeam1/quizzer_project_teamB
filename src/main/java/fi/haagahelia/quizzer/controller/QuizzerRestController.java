@@ -1,29 +1,5 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
-import ch.qos.logback.core.model.Model;
-import fi.haagahelia.quizzer.dto.CreateMessageDto;
-import fi.haagahelia.quizzer.model.Message;
-import fi.haagahelia.quizzer.model.Quizz;
-import fi.haagahelia.quizzer.repository.CategoryRepository;
-import fi.haagahelia.quizzer.repository.MessageRepository;
-import fi.haagahelia.quizzer.repository.QuizzRepository;
-import fi.haagahelia.quizzer.repository.StatusRepository;
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,7 +20,6 @@ import fi.haagahelia.quizzer.model.Quizz;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -64,9 +39,6 @@ public class QuizzerRestController {
     @GetMapping("/quizzlist")
     public List<Quizz> showAllQuizz() {
         return (List<Quizz>) quizzRepository.findAll();
-    } 
-
-}
     }
 
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
@@ -77,10 +49,12 @@ public class QuizzerRestController {
                     if (quiz.getStatus() != null && quiz.getStatus().getStatus()) {
                         return ResponseEntity.ok(quiz);
                     } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Quiz with the provided ID is not published");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Error: Quiz with the provided ID is not published");
                     }
                 })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Quiz with the provided ID does not exist"));
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Error: Quiz with the provided ID does not exist"));
     }
 
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
@@ -98,36 +72,39 @@ public class QuizzerRestController {
         return publishedQuizzes;
     }
 
-
-   @Operation(summary = "Get the all anwers of a quiz", description = "Returns all anwers of a quiz or an appropriate error message if not found or unpublished")
- @GetMapping("/quizz/{quizzId}/answers")
-    public ResponseEntity<?> getQuizAnswers(@PathVariable Long quizzId) {
-        // Check if quiz exists
-        Optional<Quizz> optionalQuizz = quizzRepository.findById(quizzId);
-        if (optionalQuizz.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("Quiz with id " + quizzId + " does not exist");
-        }
-
-        Quizz quizz = optionalQuizz.get();
-        
-        // Check if quiz is published
-        if (!quizz.getStatus().getStatus()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                 .body("Quiz with id " + quizzId + " is not published");
-        }
-
-        // Get answers for the quiz (send only needed information (DTO))
-        List<Question> questions = questionRepository.findByQuizzQuizzId(quizzId);
-        List<AnswerRequestDto> answers = new ArrayList<>();
-        for (Question question : questions) {
-            AnswerRequestDto answer = new AnswerRequestDto();
-            answer.setQuestionId(question.getQuestionId());
-            answer.setCorrectAnswer(question.getCorrectAnswer());
-            answers.add(answer);
-        }
-
-        return ResponseEntity.ok(answers);
-    }
-    
+    /*
+     * @Operation(summary = "Get the all anwers of a quiz", description =
+     * "Returns all anwers of a quiz or an appropriate error message if not found or unpublished"
+     * )
+     * 
+     * @GetMapping("/quizz/{quizzId}/answers")
+     * public ResponseEntity<?> getQuizAnswers(@PathVariable Long quizzId) {
+     * // Check if quiz exists
+     * Optional<Quizz> optionalQuizz = quizzRepository.findById(quizzId);
+     * if (optionalQuizz.isEmpty()) {
+     * return ResponseEntity.status(HttpStatus.NOT_FOUND)
+     * .body("Quiz with id " + quizzId + " does not exist");
+     * }
+     * 
+     * Quizz quizz = optionalQuizz.get();
+     * 
+     * // Check if quiz is published
+     * if (!quizz.getStatus().getStatus()) {
+     * return ResponseEntity.status(HttpStatus.FORBIDDEN)
+     * .body("Quiz with id " + quizzId + " is not published");
+     * }
+     * 
+     * // Get answers for the quiz (send only needed information (DTO))
+     * List<Question> questions = questionRepository.findByQuizzQuizzId(quizzId);
+     * List<AnswerRequestDto> answers = new ArrayList<>();
+     * for (Question question : questions) {
+     * AnswerRequestDto answer = new AnswerRequestDto();
+     * answer.setQuestionId(question.getQuestionId());
+     * answer.setCorrectAnswer(question.getCorrectAnswer());
+     * answers.add(answer);
+     * }
+     * 
+     * return ResponseEntity.ok(answers);
+     * }
+     */
 }

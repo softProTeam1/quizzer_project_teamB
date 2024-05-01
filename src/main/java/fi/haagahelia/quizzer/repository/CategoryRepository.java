@@ -1,5 +1,6 @@
 package fi.haagahelia.quizzer.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import fi.haagahelia.quizzer.model.Category;
@@ -11,5 +12,6 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     List<Category> findByName(String name);
 
     Optional<Category> findById(Long categoryId);
+    List<Category> findAllByOrderByNameAsc();
 
 }
