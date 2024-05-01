@@ -6,6 +6,8 @@ import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,11 @@ public class QuestionRestController {
     private DifficultyRepository difficultyRepository;
 
     @Operation(summary = "Get all questions by quizz ID", description = "Returns all questions of a quizz by ID")
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Questions with the provided id does not exist")
+    })
     @RequestMapping("/questionlist")
 
     @GetMapping("/{quizzId}/questions")

@@ -10,6 +10,8 @@ import fi.haagahelia.quizzer.repository.QuestionRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,6 +63,11 @@ public class QuizzerRestController {
     @Operation(summary = "Get all published quizzes",
             description = "Returns all published quizzes and optional filtered by CategoryId")
     //http://localhost:8080/api/publishedquizz?categoryId=2
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "published quizzes with the provided category id does not exist")
+    })
     @GetMapping("/publishedquizz")
     public ResponseEntity<?> getPublishedQuizzNewestToOldest(
             @RequestParam(required = false) Long categoryId) {
