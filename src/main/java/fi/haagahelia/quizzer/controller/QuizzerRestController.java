@@ -3,6 +3,7 @@ package fi.haagahelia.quizzer.controller;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Status;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import fi.haagahelia.quizzer.model.Quizz;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -40,17 +42,17 @@ public class QuizzerRestController {
     }
 
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
-    @GetMapping("/quizz/{id}")
-    public ResponseEntity<?> getQuizById(@PathVariable Long id) {
-        return quizzRepository.findById(id)
-                .map(quiz -> {
-                    if (quiz.getStatus() != null && quiz.getStatus().getStatus()) {
-                        return ResponseEntity.ok(quiz);
-                    } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Quiz with the provided ID is not published");
-                    }
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Quiz with the provided ID does not exist"));
+    @GetMapping("/quizz/{quizzId}")
+    public Quizz getQuizById(@PathVariable Long quizzId) {
+        // get the quizz by quizzId
+        Quizz quiz = quizzRepository.findById(quizzId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Quiz with the provided ID does not exist"));
+        // if the quizz is not publish then throw 400
+        if (!quiz.getStatus().getStatus()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Quiz with the provided ID is not published");
+        }
+
+        return quiz;
     }
 
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
