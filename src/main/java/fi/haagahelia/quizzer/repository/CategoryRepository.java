@@ -12,4 +12,6 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
 
     Optional<Category> findById(Long categoryId);
 
+    Category findOneByCategoryId(Long categoryId);
+
 }

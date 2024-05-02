@@ -12,7 +12,7 @@
   <div class="container">
     <div class="col-md-4">
       <h1>Categories</h1>
-      </div>
+    </div>
 
     <div class="col-md-4">
       <h3 th:inline="text">Welcome!</h3>
@@ -29,6 +29,9 @@
       <tr th:each="category: ${categories}">
         <td th:text="${category.name}"></td>
         <td th:text="${category.description}"></td>
+        <td><a th:href="@{'/filterQuizzesByCategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Filter
+            Quizzes by this Category</a>
+        </td>
         <td><a th:href="@{'/deletecategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Delete</a></td>
       </tr>
     </table>

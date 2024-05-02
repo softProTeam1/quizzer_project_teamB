@@ -3,6 +3,7 @@ package fi.haagahelia.quizzer.controller;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,10 +133,19 @@ public class QuizzerController {
         return "categorylist";
     }
 
-    //delete category
+    // delete category
     @GetMapping("/deletecategory/{categoryId}")
     public String deleteCategory(@PathVariable("categoryId") Long categoryId, Model model) {
         categoryRepository.deleteById(categoryId);
         return "redirect:../categorylist";
+    }
+
+    // filter quizz by category
+    @GetMapping("/filterQuizzesByCategory/{categoryId}")
+    public String filterQuizzesByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
+        Category category = categoryRepository.findOneByCategoryId(categoryId);
+        List<Quizz> quizzes = quizzRepository.findByCategory(category);
+        model.addAttribute("quizzlist", quizzes);
+        return "quizzlist";
     }
 }
