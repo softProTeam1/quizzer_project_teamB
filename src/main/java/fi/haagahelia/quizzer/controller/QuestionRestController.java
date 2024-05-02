@@ -29,8 +29,10 @@ public class QuestionRestController {
     @Operation(summary = "Get all questions by quizz ID", description = "Returns all questions of a quizz by ID")
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Questions with the provided quiz id does not exist")
+            @ApiResponse(responseCode = "200", description = "Questions retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Difficulty level is invalid or other bad request error"),
+            @ApiResponse(responseCode = "403", description = "Quiz is not published"),
+            @ApiResponse(responseCode = "404", description = "Quiz ID cannot be found")
     })
     // endpoint path /api/quizzlist/{quizzId}/questions/?{difficultyId}
     // http://localhost:8080/api/questionlist?quizzId=1&level=Easy

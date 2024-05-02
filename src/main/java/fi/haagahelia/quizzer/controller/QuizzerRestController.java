@@ -41,8 +41,9 @@ public class QuizzerRestController {
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Quiz with the provided id does not exist")
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the quiz"),
+            @ApiResponse(responseCode = "400", description = "The quiz with the provided ID is not published"),
+            @ApiResponse(responseCode = "404", description = "Quiz with the provided ID does not exist")
     })
     // list quiz by Id
     @GetMapping("/quizz/{quizzId}")
