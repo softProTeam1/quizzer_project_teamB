@@ -1,27 +1,26 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-
-import fi.haagahelia.quizzer.model.Question;
-import fi.haagahelia.quizzer.model.Status;
-import fi.haagahelia.quizzer.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Quizz;
+import fi.haagahelia.quizzer.model.Status;
+import fi.haagahelia.quizzer.repository.CategoryRepository;
+import fi.haagahelia.quizzer.repository.QuizzRepository;
+import fi.haagahelia.quizzer.repository.StatusRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/quizzer")
 @CrossOrigin(origins = "*")
 @Tag(name = "Quizzer", description = "Operations for accessing and managing the quizzes")
 public class QuizzerRestController {
@@ -32,15 +31,14 @@ public class QuizzerRestController {
     private StatusRepository statusRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
 
     // show all quizzes
-    @GetMapping("/quizzlist")
+    @GetMapping("")
     public List<Quizz> showAllQuizz() {
         return (List<Quizz>) quizzRepository.findAll();
     }
 
+    // list quiz by Id
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
     @GetMapping("/quizz/{quizzId}")
     public Quizz getQuizById(@PathVariable Long quizzId) {
@@ -54,20 +52,40 @@ public class QuizzerRestController {
 
         return quiz;
     }
-
-    @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes")
+    @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes and optional filtered by CategoryId")
+    // http://localhost:8080/api/publishedquizz?categoryId=2
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "published quizzes with the provided category id does not exist")
+    })
+    // list all published quiz
     @GetMapping("/publishedquizz")
-    public List<Quizz> getPublishedQuizzNewestToOldest() {
-
-        // Fetch the list of quizzes with a status of true (published)
+    public List<Quizz> getPublishedQuizzNewestToOldest(
+            @RequestParam(required = false) Long categoryId) {
+        // get status object true (published)
         Status status = statusRepository.findByStatus(true);
-        List<Quizz> publishedQuizzes = quizzRepository.findByStatus(status);
-
-        // Sort the list by creation time in descending order
-        Collections.sort(publishedQuizzes, Comparator.comparing(Quizz::getCreationTime).reversed());
-
-        // Return the sorted list
-        return publishedQuizzes;
+        // Check if the categoryId is provided
+        if (categoryId == null) {
+            // find list of quiz by status true (published)
+            List<Quizz> publishedQuizzesNotCategory = quizzRepository.findByStatus(status);
+            // Sort the list by creation time in descending order
+            // Sort newest to oldest
+            publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
+            return publishedQuizzesNotCategory;
+        }
+        // handle when there is optional parameter for category
+        else {
+            List<Quizz> publishedQuizzes;
+            // handle if categoryId is not found
+            Category category = categoryRepository.findById(categoryId).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category with provided id did not exist"));
+            // Get published quizzes by categoryId
+            publishedQuizzes = quizzRepository.findByStatusAndCategory(status, category);
+            // Sort newest to oldest
+            publishedQuizzes.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
+            return publishedQuizzes;
+        }
     }
 
 

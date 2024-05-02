@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import fi.haagahelia.quizzer.model.Answer;
 import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Difficulty;
 import fi.haagahelia.quizzer.model.Question;

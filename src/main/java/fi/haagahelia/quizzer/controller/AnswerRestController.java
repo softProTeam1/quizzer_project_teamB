@@ -15,18 +15,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import fi.haagahelia.quizzer.dto.AnswerRequestDto;
 import fi.haagahelia.quizzer.model.Answer;
-import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.repository.AnswerRepository;
-import fi.haagahelia.quizzer.repository.QuestionRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/answer")
 public class AnswerRestController {
-    @Autowired
-    private QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
     @Autowired
