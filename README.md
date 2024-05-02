@@ -14,7 +14,7 @@ A web-base application designed for teachers to create various kinds of topic-ba
 
 ## Documentation
 1. [Project Backlog](https://github.com/orgs/softProTeam1/projects/1)
-2. [Swagger documentation to display the information of REST API classes](https://quizzer-project-teamb-wbwh.onrender.com/quizzlist/swagger-ui/index.html)
+2. [Swagger documentation to display the information of REST API classes](https://quizzer-project-teamb-wbwh.onrender.com/swagger-ui/index.html)
 
 ## Developer guide
 - Required Java version: Java version 17 or higher
