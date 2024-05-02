@@ -56,9 +56,12 @@ public class QuestionRestController {
             } else if (level.equals("Normal")) {
                 return questionRepository.findByQuizzQuizzIdAndDifficulty(quizzId,
                         difficultyRepository.findByLevel("Normal"));
-            } else {
+            } else if(level.equals("Hard")){
                 return questionRepository.findByQuizzQuizzIdAndDifficulty(quizzId,
                         difficultyRepository.findByLevel("Hard"));
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Difficulty is invalid(not Easy, Normal, or Hard)");
             }
             // if level is not provided
         } else {
