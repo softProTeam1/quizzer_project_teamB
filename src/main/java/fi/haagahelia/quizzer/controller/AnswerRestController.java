@@ -1,13 +1,10 @@
 package fi.haagahelia.quizzer.controller;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,29 +33,24 @@ public class AnswerRestController {
     @Autowired
     private QuizzRepository quizzRepository;
 
-
-
-    @PostMapping("/add")
-    public Answer createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto, BindingResult bindingResult) {
+    @PostMapping("/add/{quizId}")
+    public Answer createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto, BindingResult bindingResult,@PathVariable Long quizId) {
+        // invalid request body
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid request body, answer text cannot be blank");
         }
+        // handle quiz id not found
+        Quizz quiz = quizzRepository.findById(quizId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "quiz with the quizzId does not exist"));
 
-        Question question = questionRepository.findById(answerRequestDto.getQuestionId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Quiz with the provided id does not exist"));
-
-        Quizz quizz = question.getQuizz();
-
-        if (!quizz.getStatus().getStatus()) {
+        // handle quizz not publish
+        if (!quiz.getStatus().getStatus()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz with the provided id is not published");
         }
 
-        Answer answer = new Answer();
-        answer.setAnswerText(answerRequestDto.getAnswerText());
-        answer.setCorrectness(answerRequestDto.getCorrectness());
-        answer.setQuestion(question);
+        Answer answer = new Answer(answerRequestDto.getAnswerText(), answerRequestDto.getCorrectness());
+        answer.setQuizz(quiz);
 
         return answerRepository.save(answer);
     }
