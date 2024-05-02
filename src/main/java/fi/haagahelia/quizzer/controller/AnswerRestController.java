@@ -38,30 +38,32 @@ public class AnswerRestController {
 
 
 
+   
     @PostMapping("/add")
     public Answer createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto, BindingResult bindingResult) {
+        // invalid request body
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid request body, answer text cannot be blank");
         }
+        // handle if question id is not found
+        Question question = questionRepository.findById(answerRequestDto.getQuestionId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "question with question id does not exist"));
+        // handle quiz id not found
+        Quizz quiz = quizzRepository.findById(question.getQuizz().getQuizzId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "quiz with the quizzId does not exist"));
 
-        Question question = questionRepository.findById(answerRequestDto.getQuestionId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Quiz with the provided id does not exist"));
-
-        Quizz quizz = question.getQuizz();
-
-        if (!quizz.getStatus().getStatus()) {
+        // handle quizz not publish
+        if (!quiz.getStatus().getStatus()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz with the provided id is not published");
         }
 
-        Answer answer = new Answer();
-        answer.setAnswerText(answerRequestDto.getAnswerText());
-        answer.setCorrectness(answerRequestDto.getCorrectness());
+        Answer answer = new Answer(answerRequestDto.getAnswerText(), answerRequestDto.getCorrectness());
         answer.setQuestion(question);
 
         return answerRepository.save(answer);
     }
+
 
 @GetMapping("/quizz/{quizId}/answers")
 public List<AnswerRequestDto> getQuizAnswers(@PathVariable Long quizId) {
