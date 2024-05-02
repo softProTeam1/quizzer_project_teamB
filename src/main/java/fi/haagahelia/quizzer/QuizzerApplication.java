@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import fi.haagahelia.quizzer.model.*;
 import fi.haagahelia.quizzer.repository.AnswerRepository;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.DifficultyRepository;
@@ -28,7 +29,6 @@ public class QuizzerApplication {
 			QuizzRepository quizzRepository, StatusRepository statusRepository, AnswerRepository answerRepository) {
 		return (args) -> {
 			log.info("save a couple of quizz");
-			/* 
 
 			// Category example data
 			Category category1 = new Category("History", "Knowledge about world's history");
@@ -123,7 +123,6 @@ public class QuizzerApplication {
 			questionRepository.save(question8);
 			questionRepository.save(question9);
 
-*/
 		};
 	}
 }
