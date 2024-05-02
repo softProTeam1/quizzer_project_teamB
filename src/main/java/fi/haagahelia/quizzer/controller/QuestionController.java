@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 // import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 // import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import fi.haagahelia.quizzer.model.Question;
 import fi.haagahelia.quizzer.model.Quizz;
@@ -20,8 +19,6 @@ import fi.haagahelia.quizzer.repository.DifficultyRepository;
 import fi.haagahelia.quizzer.repository.QuestionRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 public class QuestionController {
@@ -33,34 +30,58 @@ public class QuestionController {
     @Autowired
     private DifficultyRepository difficultyRepository;
 
-    // show question list
+
+    
     @GetMapping("/questionlist/{quizzId}")
-    public String questionList(@PathVariable("quizzId") Long quizzId,
-            @RequestParam(name = "difficulty", required = false) Long difficultyId,
-            Model model) {
+    public String questionList(@PathVariable("quizzId") Long quizzId, Model model) {
         Quizz quizz = quizzRepository.findById(quizzId)
-                .orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
-        // filtering function for question difficulty
+                .orElseThrow(() -> new EntityNotFoundException("project not found"));
         List<Question> questions = quizz.getQuestion();
-        if (difficultyId != null) {
-            if (difficultyId != 0) {
-                List<Question> filteredQuestions = new ArrayList<>();
-                for (Question question : questions) {
-                    if (question.getDifficulty().getDifficultyId().equals(difficultyId)) {
-                        filteredQuestions.add(question);
-                    }
+        model.addAttribute("quizzName", quizz.getName().toUpperCase());
+        model.addAttribute("questions", questions);
+        return "questionlist";
+    }
+    
+    @GetMapping("/easyquestionlist/{quizzId}")
+    public String easyquestionList(@PathVariable("quizzId") Long quizzId, Model model) {
+        return getQuestionListView(quizzId, model, 1L);
+    }
+    
+    @GetMapping("/normalquestionlist/{quizzId}")
+    public String normalquestionList(@PathVariable("quizzId") Long quizzId, Model model) {
+        return getQuestionListView(quizzId, model, 2L);
+    }
+    
+    @GetMapping("/hardquestionlist/{quizzId}")
+    public String hardquestionList(@PathVariable("quizzId") Long quizzId, Model model) {
+        return getQuestionListView(quizzId, model, 3L);
+    }
+  
+    
+    private String getQuestionListView(Long quizzId, Model model, Long difficultyId) {
+        Quizz quizz = quizzRepository.findById(quizzId)
+                .orElseThrow(() -> new EntityNotFoundException("Quizz not found"));
+    
+        List <Question> questions = quizz.getQuestion();
+
+       
+            List <Question> filteredQuestions = new ArrayList<>();
+            for (Question question : questions) {
+                if (question.getDifficulty().getDifficultyId().equals(difficultyId)) {
+                    filteredQuestions.add(question);
                 }
-                questions = filteredQuestions;
             }
-        }
+            questions = filteredQuestions;
+        
 
         model.addAttribute("quizzName", quizz.getName().toUpperCase());
         model.addAttribute("questions", questions);
-        model.addAttribute("difficulties", difficultyRepository.findAll());
-        model.addAttribute("selectedDifficultyId", difficultyId); // Pass the selected difficulty id to the template
         model.addAttribute("quizzId", quizzId);
         return "questionlist";
     }
+
+
+    
 
     // add question
     @GetMapping("/addQuestion/{quizzId}")
@@ -102,12 +123,11 @@ public class QuestionController {
         return "redirect:/questionlist/" + quizzId;
     }
 
-    //deleting question
+    // deleting question
     @GetMapping("/deletequestion/{questionId}/{quizzId}")
-    public String deletequestion(@PathVariable("questionId")Long questionId, @PathVariable("quizzId")Long quizzId) {
+    public String deletequestion(@PathVariable("questionId") Long questionId, @PathVariable("quizzId") Long quizzId) {
         questionRepository.deleteById(questionId);
-        return "redirect:/questionlist/"+quizzId;
+        return "redirect:/questionlist/" + quizzId;
     }
-    
 
 }
