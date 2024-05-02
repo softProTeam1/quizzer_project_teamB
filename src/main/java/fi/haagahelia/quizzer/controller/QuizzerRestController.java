@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/quizzer")
 @CrossOrigin(origins = "*")
 @Tag(name = "Quizzer", description = "Operations for accessing and managing the quizzes")
 public class QuizzerRestController {
@@ -39,11 +40,12 @@ public class QuizzerRestController {
     private QuestionRepository questionRepository;
 
     // show all quizzes
-    @GetMapping("/quizzlist")
+    @GetMapping("")
     public List<Quizz> showAllQuizz() {
         return (List<Quizz>) quizzRepository.findAll();
     }
 
+    // list quiz by Id
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
     @GetMapping("/quizz/{id}")
     public ResponseEntity<?> getQuizById(@PathVariable Long id) {
@@ -60,44 +62,43 @@ public class QuizzerRestController {
                         .body("Error: Quiz with the provided ID does not exist"));
     }
 
-    @Operation(summary = "Get all published quizzes",
-            description = "Returns all published quizzes and optional filtered by CategoryId")
-    //http://localhost:8080/api/publishedquizz?categoryId=2
+    @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes and optional filtered by CategoryId")
+    // http://localhost:8080/api/publishedquizz?categoryId=2
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "published quizzes with the provided category id does not exist")
     })
-    @CrossOrigin(origins = "*")
+    // list all published quiz
     @GetMapping("/publishedquizz")
-    public ResponseEntity<?> getPublishedQuizzNewestToOldest(
+    public List<Quizz> getPublishedQuizzNewestToOldest(
             @RequestParam(required = false) Long categoryId) {
-        List<Quizz> publishedQuizzes;
-        // Fetch the list of quizzes with a status of true (published)
+        // get status object true (published)
         Status status = statusRepository.findByStatus(true);
+        // Check if the categoryId is provided
         if (categoryId == null) {
+            // find list of quiz by status true (published)
             List<Quizz> publishedQuizzesNotCategory = quizzRepository.findByStatus(status);
             // Sort the list by creation time in descending order
-            publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed()); // Sort newest to
-            // oldest
-            publishedQuizzes = publishedQuizzesNotCategory;
-        } else {
-            // Check if the category exists
-            Optional<Category> categoryLookUp = categoryRepository.findById(categoryId);
-            Category category;
-
-            if (categoryLookUp.isPresent()) {
-                category = categoryLookUp.get();
-            } else
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Error: Category with the provided ID is not found");
-
-            // Get published quizzes by category in descending order of creation
-            publishedQuizzes = quizzRepository.findByStatusAndCategory(status, category);
-            publishedQuizzes.sort(Comparator.comparing(Quizz::getCreationTime).reversed()); // Sort newest to oldest
-
+            // Sort newest to oldest
+            publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
+            return publishedQuizzesNotCategory;
         }
-        return ResponseEntity.ok(publishedQuizzes);
+        // handle when there is optional parameter for category
+        else {
+
+            List<Quizz> publishedQuizzes;
+            // handle if categoryId is not found
+            Category category = categoryRepository.findById(categoryId).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category with provided id did not exist"));
+
+            // Get published quizzes by categoryId
+            publishedQuizzes = quizzRepository.findByStatusAndCategory(status, category);
+            // Sort newest to oldest
+            publishedQuizzes.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
+
+            return publishedQuizzes;
+        }
     }
 
     @Operation(summary = "Get the all anwers of a quiz", description = "Returns all anwers of a quiz or an appropriate error message if not found or unpublished")
