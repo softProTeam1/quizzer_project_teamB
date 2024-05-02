@@ -64,7 +64,7 @@ public class AnswerRestController {
     }
 
 @GetMapping("/quizz/{quizId}/answers")
-public List<AnswerRequestDto> getQuizAnswers(@PathVariable Long quizId) {
+public List<Answer> getQuizAnswers(@PathVariable Long quizId) {
     Optional<Quizz> quizOptional = quizzRepository.findById(quizId);
     if (quizOptional.isEmpty()) {
         // Quiz with the provided id does not exist
@@ -80,17 +80,8 @@ public List<AnswerRequestDto> getQuizAnswers(@PathVariable Long quizId) {
 
     List<Answer> answers = answerRepository.findByQuestionQuizzQuizzId(quizId);
 
-    // Map Answer entities to AnswerRequestDto objects
-    List<AnswerRequestDto> answerRequestDtos = new ArrayList<>();
-    for (Answer answer : answers) {
-        AnswerRequestDto answerRequestDto = new AnswerRequestDto();
-        answerRequestDto.setAnswerText(answer.getAnswerText());
-        answerRequestDto.setQuestionId(answer.getQuestion().getQuestionId()); // Set questionId
-        answerRequestDto.setCorrectness(answer.getCorrectness());
-        answerRequestDtos.add(answerRequestDto);
-    }
 
-    return answerRequestDtos;
+    return answers;
 }
 
 
