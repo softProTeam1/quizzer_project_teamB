@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface AnswerRepository extends CrudRepository<Answer,Long>{
     List<Answer> findByAnswerText(String answerText);
-
-
     List<Answer> findByQuestionQuizz(Quizz quiz);
+
 }

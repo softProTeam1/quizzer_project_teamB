@@ -1,6 +1,7 @@
 package fi.haagahelia.quizzer.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,25 +53,35 @@ public class AnswerRestController {
         }
 
         Answer answer = new Answer(answerRequestDto.getAnswerText(), answerRequestDto.getCorrectness());
+        answer.setQuestion(question);
 
         return answerRepository.save(answer);
+    
     }
 
-    @GetMapping("/quiz/{quizId}")
-    public List<Answer> getQuizAnswers(@PathVariable Long quizId) {
-        // get the quizz by quizz id if quiz with id doesn't exist throw 404
-        Quizz quiz = quizzRepository.findById(quizId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Quiz with the id does not exist"));
-        // if the quizz is not publish then throw 400
-        if (!quiz.getStatus().getStatus()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz with the provided id is not published");
-        }
-        // get all the answer of the quiz via the quizId
-        List<Answer> answers = answerRepository.findByQuestionQuizz(quiz);
-        System.out.println(answers);
 
-        // return answer as a JSON without needing any questionId
-        return answers;
+@GetMapping("/quiz/{quizId}")
+public List<Answer> getQuizAnswers(@PathVariable Long quizId) {
+    Optional<Quizz> quizOptional = quizzRepository.findById(quizId);
+    if (quizOptional.isEmpty()) {
+        // Quiz with the provided id does not exist
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Quiz with the provided id does not exist");
     }
+
+    Quizz quizz = quizOptional.get();
+
+    if (!quizz.getStatus().getStatus()) {
+        // Quiz with the provided id is not published
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz with the provided id is not published");
+    }
+
+    List<Answer> answers = answerRepository.findByQuestionQuizz(quizz);
+
+
+    return answers;
+}
+
+
+    
 
 }

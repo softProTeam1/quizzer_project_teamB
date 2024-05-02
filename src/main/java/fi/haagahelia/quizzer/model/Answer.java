@@ -20,7 +20,7 @@ public class Answer {
     @Column(nullable = false)
     private boolean correctness;
 
- 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "questionId")
     private Question question;
@@ -49,6 +49,7 @@ public class Answer {
     public Question getQuestion(){
         return question;
     }
+
 
 
 
