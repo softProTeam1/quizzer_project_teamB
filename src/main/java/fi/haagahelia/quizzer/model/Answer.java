@@ -20,9 +20,10 @@ public class Answer {
     @Column(nullable = false)
     private boolean correctness;
 
+ 
     @ManyToOne
-    @JoinColumn(name = "quizzId")
-    private Quizz quizz;
+    @JoinColumn(name = "questionId")
+    private Question question;
 
     public Answer() {}
 
@@ -30,6 +31,7 @@ public class Answer {
         super();
         this.answerText = answerText;
         this.correctness = correctness;
+        
     }
 
 
@@ -44,8 +46,8 @@ public class Answer {
         return correctness;
     }
     @JsonIgnore
-    public Quizz getQuizz(){
-        return quizz;
+    public Question getQuestion(){
+        return question;
     }
 
 
@@ -61,7 +63,7 @@ public class Answer {
         this.correctness = correctness;
     }
     @JsonIgnore
-    public void setQuizz(Quizz quizz){
-        this.quizz = quizz;
+    public void setQuestion(Question question){
+        this.question = question;
     }
 }
