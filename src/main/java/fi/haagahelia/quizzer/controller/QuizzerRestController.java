@@ -38,8 +38,13 @@ public class QuizzerRestController {
         return (List<Quizz>) quizzRepository.findAll();
     }
 
-    // list quiz by Id
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Quiz with the provided id does not exist")
+    })
+    // list quiz by Id
     @GetMapping("/quizz/{quizzId}")
     public Quizz getQuizById(@PathVariable Long quizzId) {
         // get the quizz by quizzId
@@ -52,6 +57,7 @@ public class QuizzerRestController {
 
         return quiz;
     }
+
     @Operation(summary = "Get all published quizzes", description = "Returns all published quizzes and optional filtered by CategoryId")
     // http://localhost:8080/api/publishedquizz?categoryId=2
     @ApiResponses(value = {

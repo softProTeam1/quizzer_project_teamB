@@ -30,7 +30,7 @@ public class QuestionRestController {
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
             @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Questions with the provided id does not exist")
+            @ApiResponse(responseCode = "404", description = "Questions with the provided quiz id does not exist")
     })
     // endpoint path /api/quizzlist/{quizzId}/questions/?{difficultyId}
     // http://localhost:8080/api/questionlist?quizzId=1&level=Easy
