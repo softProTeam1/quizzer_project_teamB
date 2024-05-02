@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -69,7 +70,7 @@ public class QuizzerRestController {
     // list all published quiz
     @GetMapping("/publishedquizz")
     public List<Quizz> getPublishedQuizzNewestToOldest(
-            @RequestParam(required = false) Long categoryId) {
+            @RequestParam(name="category",required = false) Long categoryId) {
         // get status object true (published)
         Status status = statusRepository.findByStatus(true);
         // Check if the categoryId is provided
@@ -81,7 +82,7 @@ public class QuizzerRestController {
             publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
             return publishedQuizzesNotCategory;
         }
-        // handle when there is optional parameter for category
+        // handle when there is optional parameter for category id
         else {
             List<Quizz> publishedQuizzes;
             // handle if categoryId is not found
@@ -89,6 +90,9 @@ public class QuizzerRestController {
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category with provided id did not exist"));
             // Get published quizzes by categoryId
             publishedQuizzes = quizzRepository.findByStatusAndCategory(status, category);
+            if(publishedQuizzes.isEmpty()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Quizz is not published");
+            }
             // Sort newest to oldest
             publishedQuizzes.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
             return publishedQuizzes;
