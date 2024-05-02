@@ -1,13 +1,10 @@
 package fi.haagahelia.quizzer.controller;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,11 +59,12 @@ public class AnswerRestController {
         answer.setQuestion(question);
 
         return answerRepository.save(answer);
+    
     }
 
 
 @GetMapping("/quizz/{quizId}/answers")
-public List<AnswerRequestDto> getQuizAnswers(@PathVariable Long quizId) {
+public List<Answer> getQuizAnswers(@PathVariable Long quizId) {
     Optional<Quizz> quizOptional = quizzRepository.findById(quizId);
     if (quizOptional.isEmpty()) {
         // Quiz with the provided id does not exist
@@ -80,19 +78,10 @@ public List<AnswerRequestDto> getQuizAnswers(@PathVariable Long quizId) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz with the provided id is not published");
     }
 
-    List<Answer> answers = answerRepository.findByQuestionQuizzQuizzId(quizId);
+    List<Answer> answers = answerRepository.findByQuestionQuizz(quizz);
 
-    // Map Answer entities to AnswerRequestDto objects
-    List<AnswerRequestDto> answerRequestDtos = new ArrayList<>();
-    for (Answer answer : answers) {
-        AnswerRequestDto answerRequestDto = new AnswerRequestDto();
-        answerRequestDto.setAnswerText(answer.getAnswerText());
-        answerRequestDto.setQuestionId(answer.getQuestion().getQuestionId()); // Set questionId
-        answerRequestDto.setCorrectness(answer.getCorrectness());
-        answerRequestDtos.add(answerRequestDto);
-    }
 
-    return answerRequestDtos;
+    return answers;
 }
 
 
