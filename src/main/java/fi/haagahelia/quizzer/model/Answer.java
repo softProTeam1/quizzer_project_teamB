@@ -1,5 +1,7 @@
 package fi.haagahelia.quizzer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,9 +20,10 @@ public class Answer {
     @Column(nullable = false)
     private boolean correctness;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "quizzId")
-    private Quizz quizz;
+    @JoinColumn(name = "questionId")
+    private Question question;
 
     public Answer() {}
 
@@ -28,6 +31,7 @@ public class Answer {
         super();
         this.answerText = answerText;
         this.correctness = correctness;
+        
     }
 
 
@@ -41,9 +45,11 @@ public class Answer {
     public boolean getCorrectness(){
         return correctness;
     }
-    public Quizz getQuizz(){
-        return quizz;
+    @JsonIgnore
+    public Question getQuestion(){
+        return question;
     }
+
 
 
 
@@ -57,7 +63,8 @@ public class Answer {
     public void setCorrectness(boolean correctness){
         this.correctness = correctness;
     }
-    public void setQuizz(Quizz quizz){
-        this.quizz = quizz;
+    @JsonIgnore
+    public void setQuestion(Question question){
+        this.question = question;
     }
 }

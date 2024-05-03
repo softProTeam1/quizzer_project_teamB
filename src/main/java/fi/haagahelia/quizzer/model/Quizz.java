@@ -36,9 +36,6 @@ public class Quizz {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
     private List<Question> questions;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
-    private List<Answer> answers;
 
     @ManyToOne
     @JoinColumn(name = "statusId")
