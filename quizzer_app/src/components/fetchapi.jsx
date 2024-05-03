@@ -41,3 +41,28 @@ export function useGetQuestions() {
     return {questions, fetchAnswersByQuizId};
 }
 
+export function inputAnswers() {
+    const [inputAnswer, setInputAnswer] = useState([]);
+    const postInputAnswer = async (answer) => {
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/answer/add`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(answer)
+                });
+            if (!response.ok) {
+                throw new Error('Network response was not ok' + response.statusText);
+            }
+            const data = await response.json();
+            setInputAnswer(data);
+        } catch (err) {
+            console.error('Fetch error:', err);
+        }
+    }
+
+    return (inputAnswer, postInputAnswer)
+}
+
