@@ -1,11 +1,17 @@
 package fi.haagahelia.quizzer.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Question {
@@ -23,9 +29,14 @@ public class Question {
     @JoinColumn(name = "difficultyId")
     private Difficulty difficulty;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "quizzId")
     private Quizz quizz;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    private List<Answer> answers;
 
     public Question() {
     }
@@ -55,8 +66,13 @@ public class Question {
         return difficulty;
     }
 
+    @JsonIgnore
     public Quizz getQuizz() {
         return quizz;
+    }
+
+    public List<Answer> getAnswer() {
+        return answers;
     }
 
     // setter
@@ -76,10 +92,15 @@ public class Question {
         this.difficulty = difficulty;
     }
 
+    @JsonIgnore
     public void setQuizz(Quizz quizz) {
         this.quizz = quizz;
     }
 
+    public void setAnswer(List<Answer> answers) {
+        this.answers = answers;
+    }
+    @JsonIgnore
     @Override
     public String toString() {
         if (this.difficulty == null && this.quizz == null) {

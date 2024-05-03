@@ -1,3 +1,4 @@
+/* 
 package fi.haagahelia.quizzer.controller;
 
 import java.util.List;
@@ -48,3 +49,4 @@ public class MessageRestController {
 		return messageRepository.save(newMessage);
 	}
 }
+*/

@@ -1,4 +1,5 @@
 package fi.haagahelia.quizzer.model;
+
 import java.time.Instant;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,9 +15,6 @@ import jakarta.persistence.OneToMany;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-
-
 
 @Entity
 public class Quizz {
@@ -37,6 +35,7 @@ public class Quizz {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
     private List<Question> questions;
+
 
     @ManyToOne
     @JoinColumn(name = "statusId")

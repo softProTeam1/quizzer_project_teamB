@@ -54,6 +54,7 @@
     <th>Name</th>
     <th>Create time</th>
     <th>Description</th>
+    <th>Category</th>
     <th>Published</th>
     <th></th>
     <th></th>
@@ -64,6 +65,7 @@
     <td th:text="${quizz.name}"></td>
     <td th:text="${quizz.getCreationTimeFormatted()}"></td>
     <td th:text="${quizz.description}"></td>
+    <td th:text="${quizz.category.getName()}"></td>
     <td th:text="${quizz.status.getStatus()  ? 'Published':'Not published'}"></td>
     <td><a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning">Edit</a></td>
     <td><a th:href="@{'/deletequizz/'+${quizz.quizzId}}" class="btn btn-xs btn-danger">Delete</a>

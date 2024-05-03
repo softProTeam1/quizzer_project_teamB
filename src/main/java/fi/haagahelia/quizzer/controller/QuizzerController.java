@@ -7,18 +7,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
 import jakarta.persistence.EntityNotFoundException;
+
 
 @Controller
 public class QuizzerController {
@@ -112,6 +109,7 @@ public class QuizzerController {
         return "redirect:../quizzlist";
     }
 
+<<<<<<< HEAD
     // add category - Hong
     @GetMapping(value = "/addCategory")
     public String addCategory(Model model) {
@@ -148,4 +146,6 @@ public class QuizzerController {
         model.addAttribute("quizzlist", quizzes);
         return "quizzlist";
     }
+=======
+>>>>>>> b63af94fcac96a7597a597ee4a361765fc2c4418
 }
