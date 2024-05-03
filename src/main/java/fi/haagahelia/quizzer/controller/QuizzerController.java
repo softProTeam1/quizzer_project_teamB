@@ -16,7 +16,6 @@ import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
 import jakarta.persistence.EntityNotFoundException;
 
-
 @Controller
 public class QuizzerController {
 
@@ -109,43 +108,4 @@ public class QuizzerController {
         return "redirect:../quizzlist";
     }
 
-<<<<<<< HEAD
-    // add category - Hong
-    @GetMapping(value = "/addCategory")
-    public String addCategory(Model model) {
-        model.addAttribute("category", new Category());
-        return "addCategory";
-    }
-
-    // save category - Hong
-    @PostMapping(value = "/saveCategory")
-    public String saveCategory(Category category) {
-        categoryRepository.save(category);
-        return "redirect:/quizzlist";
-    }
-
-    // show all category
-    @GetMapping("/categorylist")
-    public String showCat(Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
-        return "categorylist";
-    }
-
-    // delete category
-    @GetMapping("/deletecategory/{categoryId}")
-    public String deleteCategory(@PathVariable("categoryId") Long categoryId, Model model) {
-        categoryRepository.deleteById(categoryId);
-        return "redirect:../categorylist";
-    }
-
-    // filter quizz by category
-    @GetMapping("/filterQuizzesByCategory/{categoryId}")
-    public String filterQuizzesByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
-        Category category = categoryRepository.findOneByCategoryId(categoryId);
-        List<Quizz> quizzes = quizzRepository.findByCategory(category);
-        model.addAttribute("quizzlist", quizzes);
-        return "quizzlist";
-    }
-=======
->>>>>>> b63af94fcac96a7597a597ee4a361765fc2c4418
 }
