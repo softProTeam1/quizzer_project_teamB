@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import {AgGridReact} from "ag-grid-react";
-import Box from "@mui/material/Box";
 
 const BACKEND_URL = "http://localhost:8080";
 
@@ -22,15 +21,10 @@ export default function PublishedQuizz() {
     const [publishedQuizz, setPublishedQuizz] = useState([]);
 
     const [colDefs, setcolDefs] = useState([
-        {field: 'name', filter: true, sortable: true,
-            cellRendererFramework: (params) =>
-                <Box component="a" href={/* link url here */}>
-                    {params.value}
-                </Box>},
-        {field: 'description', filter: true, editable: true, sortable: true, width: 600},
-        {field: 'category.name', filter: true, sortable: true, editable: true, headerName: "Category"},
-        {field: 'creationTimeFormatted', filter: true, sortable: true, editable: true, headerName: "Added on"}
-
+        {field: 'name', filter: true, sortable: true},
+        {field: 'description', filter: true, sortable: true, width: 600},
+        {field: 'category.name', filter: true, sortable: true, headerName: "Category"},
+        {field: 'creationTimeFormatted', filter: true, sortable: true, headerName: "Added on"}
     ]);
 
 
