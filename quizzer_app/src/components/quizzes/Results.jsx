@@ -16,7 +16,26 @@ export default function Results({ quizzId , Title}) {
 
     const [colDefs] = useState([
         { headerName: "Question Text", field: "questionText", flex: 1, filter: true, sortable: true },
-        { headerName: "Difficulty", field: "difficulty.level", filter: true, sortable: true },
+        {
+            headerName: "Difficulty",
+            field: "difficulty.level",
+            filter: true,
+            sortable: true,
+            cellRenderer: (params) => {
+                return (
+                    <span
+                        style={{
+                            backgroundColor: "rgb(220, 218, 218)", // Brighter gray
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "20px",
+                            padding: "5px 10px",
+                        }}
+                    >
+						{params.value}
+					</span>
+                );
+            },
+        },
         { headerName: "Total Answers", field: "totalAnswers", filter: true, sortable: true },
         { headerName: "Correct Answers %", field: "correctPercentage", filter: true, sortable: true },
         { headerName: "Correct Answers", field: "correctAnswers", filter: true, sortable: true },
