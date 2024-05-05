@@ -75,8 +75,8 @@ function PublishedQuizz() {
 				style={{ width: "100%", height: "90vh" }}
 			>
 				<Typography variant="h4">Quizzes</Typography>
-				{quizzId !== null ? (
-					<Results quizzId={quizzId} Title={quizz.find(q => q.quizzId === quizzId)?.name} />) : (
+				{/*{quizzId !== null ? (*/}
+				{/*	<Results quizzId={quizzId} Title={quizz.find(q => q.quizzId === quizzId)?.name} />) : (*/}
 				<AgGridReact
 					rowData={quizz}
 					columnDefs={colDefs}
@@ -85,7 +85,7 @@ function PublishedQuizz() {
 					onFirstDataRendered={(params) => {
 						params.api.sizeColumnsToFit();
 					}}
-				/>)}
+				/>)
 			</div>
 		</>
 	);
