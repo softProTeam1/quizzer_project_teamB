@@ -8,10 +8,9 @@ import {
 	useGetPublishedQuizzes,
 	useGetQuestions,
 } from "../fetchapi";
-import Snackbar from "@mui/material/Snackbar";
-import { Container, Paper } from "@mui/material";
-import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
+import {Container, Paper, Snackbar} from "@mui/material";
+import {useParams} from "react-router-dom";
 
 function QuestionList() {
 	//for stack bar to work *STARTING HERE*
