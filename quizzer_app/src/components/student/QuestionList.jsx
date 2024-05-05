@@ -57,7 +57,7 @@ function QuestionList() {
 
 	// Update the specific answer based on the question index
 	const handleInputChange = (e, index) => {
-		const newAnswers = [...answers];
+		const newAnswers = [...answers]; // created new array which is a copy of the answers array with same values
 		newAnswers[index] = { ...newAnswers[index], answerText: e.target.value };
 		setAnswers(newAnswers);
 	};
@@ -71,7 +71,7 @@ function QuestionList() {
 		try {
 			//get answer text and the question text to compare them
 			//if correct
-			if (answer.answerText == question.correctAnswer) {
+			if (answer.answerText.toLowerCase() == question.correctAnswer.toLowerCase())  {
 				//setting the stack bar message
 				setMessage("That is correct, good job!");
 				//setting a single answer to be send to the db
@@ -108,7 +108,7 @@ function QuestionList() {
 		}
 	}, [answerToPost]); // Only run the effect when answerToPost changes
 
-	//calling the http post medthod from backend
+	//calling the http post method from backend
 	const saveAnswer = async (answer) => {
 		try {
 			const response = await fetch("http://localhost:8080/api/answer/add", {
