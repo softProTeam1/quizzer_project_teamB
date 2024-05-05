@@ -29,7 +29,7 @@ function App() {
 			<Routes>
 				<Route path="/" exact Component={PublishedQuizz} />
 				<Route path="/questions/:quizzId" exact Component={QuestionList} />
-				<Route path="/results" exact Component={Results} />
+				<Route path="/results/:quizzId" exact Component={Results} />
 			</Routes>
 		</BrowserRouter>
 	);
