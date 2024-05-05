@@ -70,7 +70,7 @@ public class AnswerRestController {
     
     }
 
-    @Operation(summary = "Get a quiz by ID", description = "Returns answers of a quiz by quiz ID or an appropriate error message if not found or unpublished")
+    @Operation(summary = "Get a answer by quiz ID", description = "Returns answers of a quiz by quiz ID or an appropriate error message if not found or unpublished")
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
             @ApiResponse(responseCode = "200", description = "Successfully retrieved all answers for the quiz"),
@@ -96,6 +96,22 @@ public class AnswerRestController {
 
         return answers;
 }
+
+    @Operation(summary = "Get correct answer by question ID", description = "Returns an answer by question ID or an appropriate error message if not found or unpublished")
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the quiz"),
+            @ApiResponse(responseCode = "404", description = "Answer with the provided question ID does not exist")
+    })
+    // list quiz by Id
+    @GetMapping("/correctanswer/{questionId}")
+    public String getCorrectAnswerByQuestionId(@PathVariable Long questionId) {
+        // get the answer by questionId
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Question with the provided ID does not exist"));
+
+        return question.getCorrectAnswer();
+    }
 
 
     
