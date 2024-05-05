@@ -34,11 +34,14 @@ function QuestionList(props) {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
+	const [inputAnswe, setInputAnswer] = useState([]); //answers from students
+	const [answer, setAnswer] = useState([]);
+	const [correctAnswer, setCorrectAnswer] = useState([]); //corrected answer from teacher
+	const [feedback, setFeedback] = useState(false)
+
 	return (
 		<React.Fragment>
-			<Link component="button" variant="body2" onClick={handleClickOpen}>
-				{props.quiz.name}
-			</Link>
 			<Dialog
 				fullScreen
 				open={open}

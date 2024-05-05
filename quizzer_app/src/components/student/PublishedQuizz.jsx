@@ -4,7 +4,6 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import { AgGridReact } from "ag-grid-react";
 import Typography from "@mui/material/Typography";
 import { useGetPublishedQuizzes } from "../fetchapi.jsx";
-import QuestionList from "./QuestionList.jsx";
 import {Link} from "react-router-dom";
 
 function PublishedQuizz() {
@@ -17,9 +16,13 @@ function PublishedQuizz() {
 
 		{
 			headerName: "Name",
-			cellRenderer: (params) => (
-						<QuestionList quiz={params.data}/>
-				),
+			field: "name",
+			cellRenderer: (params) => {
+				console.log(params.data); // Check the entire data object
+				const link = `/questions/${params.data.quizzId}`;
+				console.log("Link:", link); // Debugging
+				return <Link to={link}>{params.value}</Link>;
+			},
 			width: 300,
 		},
 		{ field: "description", filter: true, sortable: true, width: 600 },
