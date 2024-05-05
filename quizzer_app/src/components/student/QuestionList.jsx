@@ -4,14 +4,13 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
-	getQuizById,
+	getQuestionByDifficulty,
+	getQuizById, useGetAnswerById,
 	useGetPublishedQuizzes,
 	useGetQuestions,
 } from "../fetchapi";
 import Box from "@mui/material/Box";
 import {
-	Accordion,
-	AccordionSummary,
 	Container,
 	FormControl,
 	InputLabel,
@@ -62,15 +61,20 @@ function QuestionList() {
 	const [answers, setAnswers] = useState(Array(questions.length).fill(""));
 
 	const [selectedDifficulty, setSelectedDifficulty] = useState('');
-	const handleDifficultyChange = (event) => {
+	const handleDifficultyChange = async (event) => {
 		setSelectedDifficulty(event.target.value);
+		getQuestionByDifficulty(event.target.value);
 	};
-	const filteredQuestions = questions.filter(questions => {
-		if (selectedDifficulty === '') {
-			return questions; // Show all questions if no difficulty selected
-		}
-		return questions.difficultyLevel === selectedDifficulty;
-	});
+	// // Only render questions that match the selected difficulty
+	// const filteredQuestions = questions.filter(question =>
+	// 	selectedDifficulty === '' || question.getLevel() === selectedDifficulty
+	// );
+
+	const {question, fetchDifficulty} = getQuestionByDifficulty(quizzId, selectedDifficulty);
+	useEffect(() => {
+		fetchDifficulty();
+	}, [selectedDifficulty]);
+
 
 
 	//fetch the data on load
@@ -160,7 +164,7 @@ function QuestionList() {
 				{quiz.description}
 			</Typography>
 				<FormControl sx={{ minWidth: 120 }}>
-					<InputLabel id="difficulty-level-label" style={{ width: '200px' }} >Difficulty Level</InputLabel>
+					<InputLabel id="difficulty-level-label" style={{ width: '200px' }} >Difficulty</InputLabel>
 					<Select
 						labelId="difficulty-level-label"
 						id="difficulty-level-select"
@@ -180,7 +184,7 @@ function QuestionList() {
 						{question.questionText}
 					</Typography>
 					<Typography variant="body2" component="div" sx={{ mb: 2 }}>
-						Difficulty level: <Chip label={question.difficulty.level} />
+						Difficulty: <Chip label={question.difficulty.level} />
 					</Typography>
 					<TextField
 						required

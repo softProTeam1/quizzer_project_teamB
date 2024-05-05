@@ -77,3 +77,22 @@ export function getQuizById(quizzId) {
 
 	return { quiz, fetchQuiz };
 }
+
+export function getQuestionByDifficulty(quizzId) {
+	const [question, setQuestions] = useState([]);
+	const fetchDifficulty = async () => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}?difficulty=${difficulty}`);
+			if (!response.ok) {
+				throw new Error("Network response was not ok: " + response.statusText);
+			}
+			const data = await response.json();
+			setQuestions(data);
+		} catch (err) {
+			console.error("Fetch error:", err);
+		}
+	};
+
+	return { question, fetchDifficulty };
+}
+
