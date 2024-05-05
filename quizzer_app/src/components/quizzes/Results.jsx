@@ -5,7 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import { useGetQuestions } from "../fetchapi.jsx";
 
-export default function Results({ quizzId }) {
+export default function Results({ quizzId , Title}) {
     const { questions, fetchAnswersByQuizId } = useGetQuestions();
     const [answerStats, setAnswerStats] = useState({
         totalAnswers: 0,
@@ -70,7 +70,8 @@ export default function Results({ quizzId }) {
 
     return (
         <>
-            <h1>Results</h1>
+           
+            <h1>Results of Quizz "{Title}"</h1>
             <div className="ag-theme-material" style={{ width: '100%', height: 400 }}>
                 <AgGridReact
                     rowData={rowData}
