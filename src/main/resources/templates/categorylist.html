@@ -8,67 +8,42 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 </head>
 
-<<<<<<< HEAD <body>
+<body>
   <div class="container">
     <div class="col-md-4">
       <h1>Categories</h1>
     </div>
-    =======
 
-    <body>
-      <div class="container">
-        <div class="col-md-4">
-          <h1>Categories</h1>
-        </div>
-        >>>>>>> b63af94fcac96a7597a597ee4a361765fc2c4418
+    <div class="col-md-4">
+      <h3 th:inline="text">Welcome!</h3>
+      <h5 th:inline="text">
+        You are <span sec:authentication="name"></span>!
+      </h5>
+    </div>
 
-        <div class="col-md-4">
-          <h3 th:inline="text">Welcome!</h3>
-          <h5 th:inline="text">
-            You are <span sec:authentication="name"></span>!
-          </h5>
-        </div>
+    <table class="table table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
 
-        <table class="table table-striped">
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-          </tr>
-
-          <tr th:each="category: ${categories}">
-            <td th:text="${category.name}"></td>
-            <td th:text="${category.description}"></td>
-            <td>
-              <a th:href="@{'/deletecategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Delete</a>
-            </td>
-            <td>
-              <a th:href="@{'/editcategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Edit</a>
-            </td>
-          </tr>
-        </table>
-        <a href="/addCategory" class="btn btn-primary">Add a category</a>
-        <a th:href="@{/quizzlist}" class="btn btn-info">Back to Quizz List</a>
-      </div>
-
-      <table class="table table-striped">
-
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
-
-        <tr th:each="category: ${categories}">
-          <td th:text="${category.name}"></td>
-          <td th:text="${category.description}"></td>
-          <td><a th:href="@{'/filterQuizzesByCategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Filter
-              Quizzes by this Category</a>
-          </td>
-          <td><a th:href="@{'/deletecategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Delete</a></td>
-        </tr>
-      </table>
-      <a href="/addCategory" class="btn btn-primary">Add a category</a>
-      <a th:href="@{/quizzlist}" class="btn btn-info">Back to Quizz List</a>
+      <tr th:each="category: ${categories}">
+        <td th:text="${category.name}"></td>
+        <td th:text="${category.description}"></td>
+        <td><a th:href="@{'/filterQuizzesByCategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Filter
+            Quizzes by this Category</a>
+        </td>
+        <td>
+          <a th:href="@{'/deletecategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Delete</a>
+        </td>
+        <td>
+          <a th:href="@{'/editcategory/'+${category.categoryId}}" class="btn btn-xs btn-danger">Edit</a>
+        </td>
+      </tr>
+    </table>
+    <a href="/addCategory" class="btn btn-primary">Add a category</a>
+    <a th:href="@{/quizzlist}" class="btn btn-info">Back to Quizz List</a>
   </div>
-  </body>
+</body>
 
 </html>
