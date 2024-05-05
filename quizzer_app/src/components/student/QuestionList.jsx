@@ -1,52 +1,57 @@
-import React, {useEffect} from "react";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import {inputAnswers, useGetCorrectAnswer, useGetPublishedQuizzes, useGetQuestions} from "../fetchapi";
-import {Container, Paper} from "@mui/material";
+import {Container, Paper, Snackbar} from "@mui/material";
 import {useParams} from "react-router-dom";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
 // 	return <Slide direction="up" ref={ref} {...props} />;
 // });
 function QuestionList() {
-	let { quizzId } = useParams();
+	let { quizzId, questionId } = useParams();
 
 	const { quizz, fetchQuizzes } = useGetPublishedQuizzes(quizzId);
 	const { questions, fetchQuestions } = useGetQuestions(quizzId);
+	const [inputAnswer, setInputAnswer] = useState({}); //store answers from students
+	const [open, setOpen] = useState(false);
+	const [feedback, setFeedback] = useState(false);
+	const {correctAnswer, fetchCorrectAnswer} = useGetCorrectAnswer(questionId); //corrected answer from teacher
+
+	const handleAnswerChange = (questionId, answer) => {
+		setInputAnswer(prev => ({ ...prev, [questionId]: answer }));
+	};
+
+	const handleSubmitAnswer = (questionId) => {
+		const studentAnswer = inputAnswer[questionId]?.trim();
+		if (!studentAnswer) {
+			console.error("No answer provided for question ID:", questionId);
+			return;
+		}
+
+		postInputAnswer(questionId, studentAnswer).then(() => {
+			const correct = studentAnswer === correctAnswer[questionId];
+			setFeedback(correct);
+			setOpen(true);
+		});
+	}
+
+	const handleAnswerCheck = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setOpen(false);
+	};
 
 	useEffect(() => {
 		fetchQuizzes();
 		fetchQuestions();
-	}, [fetchQuizzes, fetchQuestions, quizzId]);
+		fetchCorrectAnswer()
+	}, [fetchQuizzes, fetchQuestions, fetchCorrectAnswer(), quizzId]);
 
-	const [open, setOpen] = React.useState(false);
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-	};
-
-	const {inputAnswer, postInputAnswer} = inputAnswers(); //answers from students
-	useEffect(() => {
-		postInputAnswer(answer);
-	}, []);
-
-	const [answer, setAnswer] = useState([]);
-
-	const {correctAnswer, fetchCorrectAnswer} = useGetCorrectAnswer(quizzId); //corrected answer from teacher
-	useEffect(() => {
-		fetchCorrectAnswer();
-	}, []);
-
-	const handleSubmitAnswer = ()
-
-	const [feedback, setFeedback] = useState(false)
 
 	return (
 		<Container maxWidth="md" sx={{ mt: 4 }}>
@@ -66,13 +71,21 @@ function QuestionList() {
 						fullWidth
 						label="Your answer"
 						variant="outlined"
+						value={inputAnswer[question.id] || ''}
+						onChange={e => handleAnswerChange(question.id, e.target.value)}
 						sx={{ mb: 2 }}
 					/>
-					<Button onClick={() => console.log('Submit answer logic here')}>
+					<Button onClick={()=> handleSubmitAnswer(question.id)}>
 						SUBMIT YOUR ANSWER
 					</Button>
 				</Paper>
 			))}
+			<Snackbar
+				open={open}
+				autoHideDuration={6000}
+				onClose={handleAnswerCheck}
+				message={feedback? "This is correct, good job!" : `That is not correct, the correct answer is '${correctAnswer}' !`}
+			/>
 		</Container>
 	);
 }

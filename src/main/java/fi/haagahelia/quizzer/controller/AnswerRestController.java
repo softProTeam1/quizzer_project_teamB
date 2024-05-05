@@ -99,7 +99,6 @@ public class AnswerRestController {
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the quiz"),
-            @ApiResponse(responseCode = "400", description = "The answer with the provided question ID is not published"),
             @ApiResponse(responseCode = "404", description = "Answer with the provided question ID does not exist")
     })
     // list quiz by Id

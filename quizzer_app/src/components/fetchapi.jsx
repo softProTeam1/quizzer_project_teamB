@@ -42,16 +42,16 @@ export function useGetQuestions(quizzId) {
 }
 
 export function useGetCorrectAnswer(questionId) {
-	const [correctAnswer, setCorrectAsnwer] = useState([]);
+	const [correctAnswer, setCorrectAnswer] = useState([]);
 	const [inputAnswer, setInputAnswer] = useState([]);
 	const fetchCorrectAnswer = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			const response = await fetch(`${BACKEND_URL}/api/answer/correctanswer/${questionId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
 			}
 			const data = await response.json();
-			setCorrectAsnwer(data.correctAnswer);
+			setCorrectAnswer(data.correctAnswer);
 		} catch (err) {
 			console.error("Fetch error:", err);
 		}
@@ -59,16 +59,16 @@ export function useGetCorrectAnswer(questionId) {
 	return { correctAnswer, fetchCorrectAnswer };
 }
 
-export function inputAnswers() {
+export function inputAnswers(questionId, studentAnswer) {
 	const [inputAnswer, setInputAnswer] = useState([]);
-	const postInputAnswer = async (answer) => {
+	const postInputAnswer = async (questionId, studentAnswer) => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/answer/add`, {
+			const response = await fetch(`${BACKEND_URL}/api/answer/add/${questionId}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(answer),
+				body: JSON.stringify(studentAnswer),
 			});
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
