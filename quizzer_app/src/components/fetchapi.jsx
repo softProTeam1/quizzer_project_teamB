@@ -26,7 +26,7 @@ export function useGetPublishedQuizzes() {
 
 export function useGetQuestions(quizzId) {
 	const [questions, setQuestions] = useState([]);
-	const fetchQuestions = async () => {
+	const fetchQuestions = async (quizzId) => {
 		try {
 			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
 			if (!response.ok) {

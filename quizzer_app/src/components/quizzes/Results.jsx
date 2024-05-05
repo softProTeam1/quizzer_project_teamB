@@ -6,7 +6,7 @@ import { AgGridReact } from "ag-grid-react";
 import { useGetQuestions } from "../fetchapi.jsx";
 
 export default function Results({ quizzId , Title}) {
-    const { questions, fetchAnswersByQuizId } = useGetQuestions();
+    const { questions, fetchQuestions } = useGetQuestions();
     const [answerStats, setAnswerStats] = useState({
         totalAnswers: 0,
         correctPercentage: 0,
@@ -44,9 +44,9 @@ export default function Results({ quizzId , Title}) {
 
     useEffect(() => {
         if (quizzId) {
-            fetchAnswersByQuizId(quizzId);
+            fetchQuestions(quizzId);
         }
-    }, [fetchAnswersByQuizId, quizzId]);
+    }, [fetchQuestions, quizzId]);
 
     useEffect(() => {
         if (questions && questions.length > 0) {
