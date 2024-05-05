@@ -1,7 +1,5 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.Comparator;
-import java.util.List;
 import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
@@ -17,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
+import java.util.List;
 
 
 @RestController
@@ -41,8 +41,9 @@ public class QuizzerRestController {
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
     @ApiResponses(value = {
             // The responseCode property defines the HTTP status code of the response
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Quiz with the provided id does not exist")
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the quiz"),
+            @ApiResponse(responseCode = "400", description = "The quiz with the provided ID is not published"),
+            @ApiResponse(responseCode = "404", description = "Quiz with the provided ID does not exist")
     })
     // list quiz by Id
     @GetMapping("/quizz/{quizzId}")
@@ -68,7 +69,7 @@ public class QuizzerRestController {
     // list all published quiz
     @GetMapping("/publishedquizz")
     public List<Quizz> getPublishedQuizzNewestToOldest(
-            @RequestParam(required = false) Long categoryId) {
+            @RequestParam(name = "category", required = false) Long categoryId) {
         // get status object true (published)
         Status status = statusRepository.findByStatus(true);
         // Check if the categoryId is provided
@@ -80,7 +81,7 @@ public class QuizzerRestController {
             publishedQuizzesNotCategory.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
             return publishedQuizzesNotCategory;
         }
-        // handle when there is optional parameter for category
+        // handle when there is optional parameter for category id
         else {
             List<Quizz> publishedQuizzes;
             // handle if categoryId is not found
@@ -88,12 +89,14 @@ public class QuizzerRestController {
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category with provided id did not exist"));
             // Get published quizzes by categoryId
             publishedQuizzes = quizzRepository.findByStatusAndCategory(status, category);
+            if (publishedQuizzes.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Quizz is not published");
+            }
             // Sort newest to oldest
             publishedQuizzes.sort(Comparator.comparing(Quizz::getCreationTime).reversed());
             return publishedQuizzes;
         }
     }
-
 
 
 }
