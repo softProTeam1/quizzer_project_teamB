@@ -67,9 +67,9 @@ function QuestionList() {
 	};
 	const filteredQuestions = questions.filter(questions => {
 		if (selectedDifficulty === '') {
-			return true; // Show all questions if no difficulty selected
+			return questions; // Show all questions if no difficulty selected
 		}
-		return questions.difficultyLevel.toLowerCase() === selectedDifficulty.toLowerCase();
+		return questions.difficultyLevel === selectedDifficulty;
 	});
 
 
@@ -159,9 +159,8 @@ function QuestionList() {
 			<Typography variant="subtitle1" gutterBottom>
 				{quiz.description}
 			</Typography>
-			<Box sx={{ marginBottom: '20px' }}>
 				<FormControl sx={{ minWidth: 120 }}>
-					<InputLabel id="difficulty-level-label">Difficulty Level</InputLabel>
+					<InputLabel id="difficulty-level-label" style={{ width: '200px' }} >Difficulty Level</InputLabel>
 					<Select
 						labelId="difficulty-level-label"
 						id="difficulty-level-select"
@@ -169,29 +168,12 @@ function QuestionList() {
 						label="Difficulty Level"
 						onChange={handleDifficultyChange}
 					>
-						<MenuItem value="">All</MenuItem>
+						<MenuItem value="">Any</MenuItem>
 						<MenuItem value="easy">Easy</MenuItem>
 						<MenuItem value="normal">Normal</MenuItem>
 						<MenuItem value="hard">Hard</MenuItem>
 					</Select>
 				</FormControl>
-			</Box>
-			<div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-				{filteredQuestions.map((question, index) => (
-					<Accordion key={index}>
-						<AccordionSummary
-							expandIcon={<ExpandMoreIcon />}
-							aria-controls={`panel${index}a-content`}
-							id={`panel${index}a-header`}
-							sx={{ marginTop: '-15px'}}
-						>
-							<Box>
-								<h3>{question.questionText}</h3>
-								<Typography variant="subtitle1" gutterBottom>Difficulty Level
-									<Chip label={` ${question.difficultyLevel}`} size="small" color="success" style={{ marginLeft: '10px'}} />
-								</Typography>
-							</Box>
-						</AccordionSummary>
 			{questions.map((question, index) => (
 				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
 					<Typography variant="h6" sx={{ mb: 2 }}>
