@@ -5,6 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import Typography from "@mui/material/Typography";
 import { useGetPublishedQuizzes } from "../fetchapi.jsx";
 import QuestionList from "./QuestionList.jsx";
+import {Link} from "react-router-dom";
 
 function PublishedQuizz() {
 	const { quizz, fetchQuizzes } = useGetPublishedQuizzes();
@@ -13,11 +14,12 @@ function PublishedQuizz() {
 	}, []);
 
 	const [colDefs, setcolDefs] = useState([
+
 		{
 			headerName: "Name",
 			cellRenderer: (params) => (
-				<QuestionList  quiz={params.data}/>
-			),
+						<QuestionList quiz={params.data}/>
+				),
 			width: 300,
 		},
 		{ field: "description", filter: true, sortable: true, width: 600 },
@@ -26,6 +28,16 @@ function PublishedQuizz() {
 			filter: true,
 			sortable: true,
 			headerName: "Category",
+			cellRenderer: (params) => {
+				return <span style={{
+					backgroundColor: "rgb(220, 218, 218)", // Brighter gray
+					boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+					borderRadius: "20px",
+					padding: "5px 10px"
+				}}>
+					{params.value}
+				</span>;
+			}
 		},
 		{
 			field: "creationTimeFormatted",

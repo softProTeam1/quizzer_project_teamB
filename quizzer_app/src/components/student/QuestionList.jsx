@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { useGetQuestions } from "../fetchapi";
+import {Link} from "react-router-dom";
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -35,7 +36,9 @@ function QuestionList(props) {
 	};
 	return (
 		<React.Fragment>
-			<Button onClick={handleClickOpen}>{props.quiz.name}</Button>
+			<Link component="button" variant="body2" onClick={handleClickOpen}>
+				{props.quiz.name}
+			</Link>
 			<Dialog
 				fullScreen
 				open={open}
@@ -79,7 +82,7 @@ function QuestionList(props) {
 									<div>
 										<TextField
 											id="inputAnswer"
-											label="your answer"
+											label="Your answer"
 											variant="outlined"
 										/>
 									</div>
