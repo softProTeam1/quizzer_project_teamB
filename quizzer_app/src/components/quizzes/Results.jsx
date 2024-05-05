@@ -3,10 +3,10 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import { AgGridReact } from "ag-grid-react";
 
-import { useGetQuestions } from "../fetchapi.jsx";
+import {useGetAnswerById} from "../fetchapi.jsx";
 
 export default function Results({ quizzId , Title}) {
-    const { questions, fetchQuestions } = useGetQuestions();
+    const { questions, fetchAnswersById } = useGetAnswerById();
     const [answerStats, setAnswerStats] = useState({
         totalAnswers: 0,
         correctPercentage: 0,
@@ -44,9 +44,9 @@ export default function Results({ quizzId , Title}) {
 
     useEffect(() => {
         if (quizzId) {
-            fetchQuestions(quizzId);
+            fetchAnswersById(quizzId);
         }
-    }, [fetchQuestions, quizzId]);
+    }, [fetchAnswersById, quizzId]);
 
     useEffect(() => {
         if (questions && questions.length > 0) {

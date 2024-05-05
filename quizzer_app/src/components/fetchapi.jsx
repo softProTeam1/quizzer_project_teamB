@@ -26,7 +26,7 @@ export function useGetPublishedQuizzes() {
 
 export function useGetQuestions(quizzId) {
 	const [questions, setQuestions] = useState([]);
-	const fetchQuestions = async (quizzId) => {
+	const fetchQuestions = async () => {
 		try {
 			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
 			if (!response.ok) {
@@ -39,6 +39,23 @@ export function useGetQuestions(quizzId) {
 		}
 	};
 	return { questions, fetchQuestions };
+}
+
+export function useGetAnswerById(quizzId) {
+	const [questions, setAnswers] = useState([]);
+	const fetchAnswersById = async (quizzId) => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			if (!response.ok) {
+				throw new Error("Network response was not ok" + response.statusText);
+			}
+			const data = await response.json();
+			setAnswers(data);
+		} catch (err) {
+			console.error("Fetch error:", err);
+		}
+	};
+	return { questions, fetchAnswersById };
 }
 
 export function getQuizById(quizzId) {

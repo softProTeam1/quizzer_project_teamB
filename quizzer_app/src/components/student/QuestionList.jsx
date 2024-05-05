@@ -43,7 +43,7 @@ function QuestionList() {
 	//ACTUALLY getting a single quiz by Id 
 	const { quiz, fetchQuiz} = getQuizById(quizzId);
 	//getting the question from the quizzId 
-	const { questions, fetchQuestions } = useGetQuestions(quizzId); 
+	const { questions, fetchQuestions } = useGetQuestions(quizzId);
 	//Initialize an array of answers with the same length as the questions array
 	const [answers, setAnswers] = useState(Array(questions.length).fill(""));
 
@@ -80,7 +80,7 @@ function QuestionList() {
 					questionId: question.questionId,
 					correctness: true,
 				});
-			} 
+			}
 			//if incorrect
 			else {
 				//setting the stack bar message
@@ -135,29 +135,29 @@ function QuestionList() {
 			</Typography>
 			{questions.map((question, index) => (
 				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
-						<Typography variant="h6" sx={{ mb: 2 }}>
-							{question.questionText}
-						</Typography>
-						<Typography variant="body2" component="div" sx={{ mb: 2 }}>
-							Difficulty level: <Chip label={question.difficulty.level} />
-						</Typography>
-						<TextField
-							required
-							margin="dense"
-							fullWidth
-							label="Your answer"
-							variant="outlined"
-							value={answers[index]?.answerText || ""}
-							onChange={(e) => handleInputChange(e, index)}
-						/>
-						<Button
-							variant="outlined"
-							onClick={() => {
-								checkAnswer(answers[index], question);
-							}}
-						>
-							SUBMIT YOUR ANSWER
-						</Button>
+					<Typography variant="h6" sx={{ mb: 2 }}>
+						{question.questionText}
+					</Typography>
+					<Typography variant="body2" component="div" sx={{ mb: 2 }}>
+						Difficulty level: <Chip label={question.difficulty.level} />
+					</Typography>
+					<TextField
+						required
+						margin="dense"
+						fullWidth
+						label="Your answer"
+						variant="outlined"
+						value={answers[index]?.answerText || ""}
+						onChange={(e) => handleInputChange(e, index)}
+					/>
+					<Button
+						variant="outlined"
+						onClick={() => {
+							checkAnswer(answers[index], question);
+						}}
+					>
+						SUBMIT YOUR ANSWER
+					</Button>
 				</Paper>
 			))}
 
