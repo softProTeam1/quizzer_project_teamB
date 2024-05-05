@@ -117,3 +117,36 @@ erDiagram
         string level
     }
 
+## Frontend Deployment Instructions
+1. Environment Setup:
+-- In the frontend folder of your project, add a .env file for the development environment.
+-- Define the VITE_BACKEND_URL environment variable with the URL of the backend's development environment. For example:'VITE_BACKEND_URL=http://localhost:8080'
+-- Make sure that every fetch function call in your code uses this environment variable as the URL prefix.
+
+2. Prepare for Production:
+-- Create a .env.production file in the frontend folder.
+-- Define the VITE_BACKEND_URL environment variable with the URL of the backend's production environment. For example:'VITE_BACKEND_URL=https://quizzer-project-teamb-wbwh.onrender.com'
+-- Replace https://quizzer-project-teamb-wbwh.onrender.com with the actual URL of your backend's production environment.
+
+3. Push Changes to GitHub:
+-- Commit and push these changes to your GitHub repository.
+
+4. Setup Render:
+-- Sign in to Render using your GitHub account.
+-- Create a PostgreSQL database instance in the Render dashboard if you haven't already.
+-- Copy the values for “Username”, “Password”, and “Internal Database URL” in the Connections section for later use.
+
+5. Deployment on Render:
+-- On the Render dashboard, click the “New” button and choose “Static Site”.
+-- Select your project’s repository from the repository list and click the “Connect” button.
+-- Choose a name for the service. If the frontend application is not initialized in the repository’s root folder, set “Root Directory” as the folder’s name.
+-- Set “Build Command” as npm run build and “Publish Directory” as dist.
+-- Click the “Advanced” button and set “Auto-Deploy” as “Yes” and “Branch” as “production”.
+-- Click the “Create Static Site” button to create the service.
+
+6. Routing Configuration:
+-- On the service’s page, navigate to “Redirects/Rewrites” from the left-hand side navigation menu.
+-- Set the “Source” as /*, “Destination” as /index.html, and “Action” as “Rewrite”.
+--Click the “Save Changes” button.
+
+Following these steps will deploy the frontend of Quizzer on Render, allowing users to access the application through the specified URL.
