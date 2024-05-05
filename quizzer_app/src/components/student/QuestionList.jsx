@@ -9,8 +9,22 @@ import {
 	useGetQuestions,
 } from "../fetchapi";
 import Box from "@mui/material/Box";
-import {Container, Paper, Snackbar} from "@mui/material";
+import {
+	Accordion,
+	AccordionSummary,
+	Container,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Paper,
+	Select,
+	Snackbar
+} from "@mui/material";
 import {useParams} from "react-router-dom";
+
+function ExpandMoreIcon() {
+	return null;
+}
 
 function QuestionList() {
 	//for stack bar to work *STARTING HERE*
@@ -46,6 +60,18 @@ function QuestionList() {
 	const { questions, fetchQuestions } = useGetQuestions(quizzId);
 	//Initialize an array of answers with the same length as the questions array
 	const [answers, setAnswers] = useState(Array(questions.length).fill(""));
+
+	const [selectedDifficulty, setSelectedDifficulty] = useState('');
+	const handleDifficultyChange = (event) => {
+		setSelectedDifficulty(event.target.value);
+	};
+	const filteredQuestions = questions.filter(questions => {
+		if (selectedDifficulty === '') {
+			return true; // Show all questions if no difficulty selected
+		}
+		return questions.difficultyLevel.toLowerCase() === selectedDifficulty.toLowerCase();
+	});
+
 
 	//fetch the data on load
 	useEffect(() => {
@@ -133,6 +159,39 @@ function QuestionList() {
 			<Typography variant="subtitle1" gutterBottom>
 				{quiz.description}
 			</Typography>
+			<Box sx={{ marginBottom: '20px' }}>
+				<FormControl sx={{ minWidth: 120 }}>
+					<InputLabel id="difficulty-level-label">Difficulty Level</InputLabel>
+					<Select
+						labelId="difficulty-level-label"
+						id="difficulty-level-select"
+						value={selectedDifficulty}
+						label="Difficulty Level"
+						onChange={handleDifficultyChange}
+					>
+						<MenuItem value="">All</MenuItem>
+						<MenuItem value="easy">Easy</MenuItem>
+						<MenuItem value="normal">Normal</MenuItem>
+						<MenuItem value="hard">Hard</MenuItem>
+					</Select>
+				</FormControl>
+			</Box>
+			<div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+				{filteredQuestions.map((question, index) => (
+					<Accordion key={index}>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls={`panel${index}a-content`}
+							id={`panel${index}a-header`}
+							sx={{ marginTop: '-15px'}}
+						>
+							<Box>
+								<h3>{question.questionText}</h3>
+								<Typography variant="subtitle1" gutterBottom>Difficulty Level
+									<Chip label={` ${question.difficultyLevel}`} size="small" color="success" style={{ marginLeft: '10px'}} />
+								</Typography>
+							</Box>
+						</AccordionSummary>
 			{questions.map((question, index) => (
 				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
 					<Typography variant="h6" sx={{ mb: 2 }}>
