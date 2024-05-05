@@ -41,6 +41,23 @@ export function useGetQuestions(quizzId) {
 	return { questions, fetchQuestions };
 }
 
+export function useGetCorrectAnswer(quizzId) {
+	const [correctAnswer, setCorrectAsnwer] = useState([]);
+	const fetchCorrectAnswer = async () => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			if (!response.ok) {
+				throw new Error("Network response was not ok" + response.statusText);
+			}
+			const data = await response.json();
+			setCorrectAsnwer(data.correctAnswer);
+		} catch (err) {
+			console.error("Fetch error:", err);
+		}
+	};
+	return { correctAnswer, fetchCorrectAnswer };
+}
+
 export function inputAnswers() {
 	const [inputAnswer, setInputAnswer] = useState([]);
 	const postInputAnswer = async (answer) => {

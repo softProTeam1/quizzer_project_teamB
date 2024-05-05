@@ -15,16 +15,24 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import { useGetQuestions } from "../fetchapi";
-import {Link} from "react-router-dom";
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
-});
-function QuestionList(props) {
-	const { questions, fetchQuestions } = useGetQuestions(props.quiz.quizzId);
+import {useGetPublishedQuizzes, useGetQuestions} from "../fetchapi";
+import {Container, Paper} from "@mui/material";
+import {useParams} from "react-router-dom";
+
+// const Transition = React.forwardRef(function Transition(props, ref) {
+// 	return <Slide direction="up" ref={ref} {...props} />;
+// });
+function QuestionList() {
+	let { quizzId } = useParams();
+
+	const { quizz, fetchQuizzes } = useGetPublishedQuizzes(quizzId);
+	const { questions, fetchQuestions } = useGetQuestions(quizzId);
+
 	useEffect(() => {
+		fetchQuizzes();
 		fetchQuestions();
-	}, []);
+	}, [fetchQuizzes, fetchQuestions, quizzId]);
+
 	const [open, setOpen] = React.useState(false);
 
 	const handleClickOpen = () => {
@@ -41,71 +49,31 @@ function QuestionList(props) {
 	const [feedback, setFeedback] = useState(false)
 
 	return (
-		<React.Fragment>
-			<Dialog
-				fullScreen
-				open={open}
-				onClose={handleClose}
-				TransitionComponent={Transition}
-			>
-				<AppBar sx={{ position: "relative" }}>
-					<Toolbar>
-						<IconButton
-							edge="start"
-							color="inherit"
-							onClick={handleClose}
-							aria-label="close"
-						>
-							<CloseIcon />
-						</IconButton>
-						<Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-							Quizzer
-						</Typography>
-					</Toolbar>
-				</AppBar>
-				<Typography sx={{ mb: 2 }} variant="h4" component="div">
-					{props.quiz.name}
-				</Typography>
-				<Typography sx={{ mb: 2 }} variant="h5" component="div">
-					{props.quiz.description}
-				</Typography>
-				<List>
-					{questions.map((q, index) => (
-						<React.Fragment key={index}>
-							<ListItemButton>
-								<Box flexDirection="column">
-									<ListItemText
-										primary={q.questionText}
-										secondary={
-											<>
-												Difficulty level: <Chip label={q.difficulty.level} />
-											</>
-										}
-									/>
-									<div>
-										<TextField
-											id="inputAnswer"
-											label="Your answer"
-											variant="outlined"
-										/>
-									</div>
-									<div>
-										<Button
-											onClick={() => {
-												console.log("to be added");
-											}}
-										>
-											SUBMIT YOUR ANSWER
-										</Button>
-									</div>
-								</Box>
-							</ListItemButton>
-							<Divider />
-						</React.Fragment>
-					))}
-				</List>
-			</Dialog>
-		</React.Fragment>
+		<Container maxWidth="md" sx={{ mt: 4 }}>
+			<Typography variant="h4" gutterBottom>
+				{quizz.name}
+			</Typography>
+			<Typography variant="subtitle1" gutterBottom>
+				{quizz.description}
+			</Typography>
+			{questions.map((question, index) => (
+				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
+					<Typography variant="h6" sx={{ mb: 2 }}>{question.questionText}</Typography>
+					<Typography variant="body2" sx={{ mb: 2 }}>
+						Difficulty level: <Chip label={question.difficulty.level} />
+					</Typography>
+					<TextField
+						fullWidth
+						label="Your answer"
+						variant="outlined"
+						sx={{ mb: 2 }}
+					/>
+					<Button onClick={() => console.log('Submit answer logic here')}>
+						SUBMIT YOUR ANSWER
+					</Button>
+				</Paper>
+			))}
+		</Container>
 	);
 }
 

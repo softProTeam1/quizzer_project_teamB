@@ -27,7 +27,7 @@ function App() {
 			</AppBar>
 			<Routes>
 				<Route path="/" exact Component={PublishedQuizz} />
-				<Route path="/questions:quizzId" exact Component={QuestionList} />
+				<Route path="/questions/:quizzId" exact Component={QuestionList} />
 			</Routes>
 		</BrowserRouter>
 	);
