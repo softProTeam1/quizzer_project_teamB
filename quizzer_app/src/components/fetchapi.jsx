@@ -41,8 +41,9 @@ export function useGetQuestions(quizzId) {
 	return { questions, fetchQuestions };
 }
 
-export function useGetCorrectAnswer(quizzId) {
+export function useGetCorrectAnswer(questionId) {
 	const [correctAnswer, setCorrectAsnwer] = useState([]);
+	const [inputAnswer, setInputAnswer] = useState([]);
 	const fetchCorrectAnswer = async () => {
 		try {
 			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);

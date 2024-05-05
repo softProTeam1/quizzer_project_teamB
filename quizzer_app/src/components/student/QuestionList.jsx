@@ -1,21 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
-import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemButton from "@mui/material/ListItemButton";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
-import {useGetPublishedQuizzes, useGetQuestions} from "../fetchapi";
+import {inputAnswers, useGetCorrectAnswer, useGetPublishedQuizzes, useGetQuestions} from "../fetchapi";
 import {Container, Paper} from "@mui/material";
 import {useParams} from "react-router-dom";
 
@@ -43,9 +32,20 @@ function QuestionList() {
 		setOpen(false);
 	};
 
-	const [inputAnswe, setInputAnswer] = useState([]); //answers from students
+	const {inputAnswer, postInputAnswer} = inputAnswers(); //answers from students
+	useEffect(() => {
+		postInputAnswer(answer);
+	}, []);
+
 	const [answer, setAnswer] = useState([]);
-	const [correctAnswer, setCorrectAnswer] = useState([]); //corrected answer from teacher
+
+	const {correctAnswer, fetchCorrectAnswer} = useGetCorrectAnswer(quizzId); //corrected answer from teacher
+	useEffect(() => {
+		fetchCorrectAnswer();
+	}, []);
+
+	const handleSubmitAnswer = ()
+
 	const [feedback, setFeedback] = useState(false)
 
 	return (
