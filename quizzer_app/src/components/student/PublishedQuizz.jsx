@@ -53,9 +53,19 @@ function PublishedQuizz() {
 			headerName: "Added on",
 		},
 		{
-			cellRenderer: params => (
-				<Button onClick={() => {setQuizzId(params.data.quizzId)}}>see results</Button>
-			)
+			cellRenderer: (params) => {
+				const link = `/quizzer/quizz/${params.data.quizzId}`;
+				return (
+					<div>
+						<Link to={link}>
+							<Button onClick={() => {setQuizzId(params.data.quizzId)}}>
+								See Results
+							</Button>
+						</Link>
+					</div>
+				);
+			}
+
 		}
 	]);
 	return (

@@ -3,10 +3,16 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import { AgGridReact } from "ag-grid-react";
 
-import {useGetAnswerById} from "../fetchapi.jsx";
+import {getQuizById, useGetAnswerById} from "../fetchapi.jsx";
+import Typography from "@mui/material/Typography";
+import {Container} from "@mui/material";
+import {useParams} from "react-router-dom";
 
-export default function Results({ quizzId , Title}) {
+export default function Results() {
+    //getting the quizzId from the URL
+    let { quizzId } = useParams();
     const { questions, fetchAnswersById } = useGetAnswerById();
+    const { quiz, fetchQuiz} = getQuizById(quizzId);
     const [answerStats, setAnswerStats] = useState({
         totalAnswers: 0,
         correctPercentage: 0,
@@ -41,6 +47,10 @@ export default function Results({ quizzId , Title}) {
         { headerName: "Correct Answers", field: "correctAnswers", filter: true, sortable: true },
         { headerName: "Wrong Answers", field: "wrongAnswers", filter: true, sortable: true }
     ]);
+
+    useEffect(() => {
+        fetchQuiz();
+    },[]);
 
     useEffect(() => {
         if (quizzId) {
@@ -89,9 +99,10 @@ export default function Results({ quizzId , Title}) {
 
     return (
         <>
-           
-            <h1>Results of Quizz "{Title}"</h1>
-            <div className="ag-theme-material" style={{ width: '100%', height: 400 }}>
+            <div className="ag-theme-material" style={{width: '100%', height: 400}}>
+                <Typography variant="h4" gutterBottom>
+                    {quiz.name}
+                </Typography>
                 <AgGridReact
                     rowData={rowData}
                     columnDefs={colDefs}
