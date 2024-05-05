@@ -41,44 +41,22 @@ export function useGetQuestions(quizzId) {
 	return { questions, fetchQuestions };
 }
 
-export function useGetCorrectAnswer(questionId) {
-	const [correctAnswer, setCorrectAsnwer] = useState([]);
-	const [inputAnswer, setInputAnswer] = useState([]);
-	const fetchCorrectAnswer = async () => {
-		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
-			if (!response.ok) {
-				throw new Error("Network response was not ok" + response.statusText);
-			}
-			const data = await response.json();
-			setCorrectAsnwer(data.correctAnswer);
-		} catch (err) {
-			console.error("Fetch error:", err);
-		}
-	};
-	return { correctAnswer, fetchCorrectAnswer };
-}
+export function getQuizById(quizzId) {
+	const [quiz, setQuiz] = useState([]);
 
-export function inputAnswers() {
-	const [inputAnswer, setInputAnswer] = useState([]);
-	const postInputAnswer = async (answer) => {
+	// Define an async function to fetch quizzes
+	const fetchQuiz = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/answer/add`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(answer),
-			});
+			const response = await fetch(`${BACKEND_URL}/api/quizzer/quizz/${quizzId}`);
 			if (!response.ok) {
-				throw new Error("Network response was not ok" + response.statusText);
+				throw new Error("Network response was not ok: " + response.statusText);
 			}
 			const data = await response.json();
-			setInputAnswer(data);
+			setQuiz(data);
 		} catch (err) {
 			console.error("Fetch error:", err);
 		}
 	};
 
-	return inputAnswer, postInputAnswer;
+	return { quiz, fetchQuiz };
 }
