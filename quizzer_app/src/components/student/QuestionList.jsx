@@ -67,6 +67,7 @@ function QuestionList() {
 	};
 
 	const difficulties = ["", "Easy", "Normal", "Hard"];
+
 	// Only render questions that match the selected difficulty
 	const filteredQuestions = questions.filter(question =>
 		selectedDifficulty === '' || selectedDifficulty === question.difficulty.level
