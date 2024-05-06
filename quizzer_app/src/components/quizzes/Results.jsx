@@ -56,7 +56,7 @@ export default function Results() {
         if (quizzId) {
             fetchAnswersById(quizzId);
         }
-    }, [fetchAnswersById, quizzId]);
+    }, []);
 
     useEffect(() => {
         if (questions && questions.length > 0) {
