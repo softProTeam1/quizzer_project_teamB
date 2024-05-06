@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Comparator;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/quizzer")
 @CrossOrigin(origins = "*")
@@ -50,10 +49,12 @@ public class QuizzerRestController {
     public Quizz getQuizById(@PathVariable Long quizzId) {
         // get the quizz by quizzId
         Quizz quiz = quizzRepository.findById(quizzId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Quiz with the provided ID does not exist"));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Error: Quiz with the provided ID does not exist"));
         // if the quizz is not publish then throw 400
         if (!quiz.getStatus().getStatus()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Quiz with the provided ID is not published");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Error: Quiz with the provided ID is not published");
         }
 
         return quiz;
@@ -97,6 +98,4 @@ public class QuizzerRestController {
             return publishedQuizzes;
         }
     }
-
-
 }

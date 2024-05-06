@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import Home from './Home';
-import PublishedQuizz from "./components/student/PublishedQuizz.jsx";
+import PublishedQuizz from './components/student/PublishedQuizz';
 
 function CustomTabPanel(props) {
-    const {children, value, index, ...other} = props;
+    const { children, value, index, ...other } = props;
 
     return (
         <div
@@ -20,7 +20,7 @@ function CustomTabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box sx={{p: 3}}>
+                <Box sx={{ p: 3 }}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -49,8 +49,8 @@ export default function BasicTabs() {
     };
 
     return (
-        <Box sx={{width: '100%'}}>
-            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+        <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Home" {...a11yProps(0)} />
                     <Tab label="Quizzes" {...a11yProps(1)} />
@@ -58,10 +58,10 @@ export default function BasicTabs() {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <Home/>
+                <Home />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                <PublishedQuizz/>
+                <PublishedQuizz />
             </CustomTabPanel>
             {/*<CustomTabPanel value={value} index={2}>*/}
             {/*    <About/>*/}

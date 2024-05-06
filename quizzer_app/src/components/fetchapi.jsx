@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 
 // Define BACKEND_URL
 const BACKEND_URL = "http://localhost:8080";
@@ -21,7 +21,44 @@ export function useGetPublishedQuizzes() {
         }
     };
 
-    return {quizz, fetchQuizzes};
+    return { quizz, fetchQuizzes };
+}
+
+export function useGetCategory() {
+    const [category, setCategory] = useState([]);
+
+    const fetchCategory = async () => {
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/category`)
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            const data = await response.json();
+            setCategory(data);
+        } catch (err) {
+            console.error('Fetch error:', err)
+        }
+    };
+
+    return { category, fetchCategory }
+}
+
+export function useGetQuizzFilteredByCategory() {
+    const [filteredQuizzByCategory, setFilteredQuizzByCategory] = useState([]);
+
+    const fetchFilteredQuizzByCategory = async (categoryId) => {
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/category/filterQuizzByCategory/${categoryId}`)
+            if (!response.ok) {
+                throw new Error('Network response was not ok' + response.statusText);
+            }
+            const data = await response.json();
+            setFilteredQuizzByCategory(data);
+        } catch (err) {
+            console.error('Fetch error:', err);
+        }
+    };
+    return { filteredQuizzByCategory, fetchFilteredQuizzByCategory };
 }
 
 export function useGetQuestions() {
@@ -38,7 +75,7 @@ export function useGetQuestions() {
             console.error('Fetch error:', err);
         }
     };
-    return {questions, fetchAnswersByQuizId};
+    return { questions, fetchAnswersByQuizId };
 }
 
 export function inputAnswers() {
