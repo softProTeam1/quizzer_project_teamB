@@ -61,20 +61,20 @@ function QuestionList() {
 	const [answers, setAnswers] = useState(Array(questions.length).fill(""));
 
 	const [selectedDifficulty, setSelectedDifficulty] = useState('');
+
 	const handleDifficultyChange = async (event) => {
 		setSelectedDifficulty(event.target.value);
-		getQuestionByDifficulty(event.target.value);
+		fetchDifficulty(quizzId, event.target.value);
 	};
-	// // Only render questions that match the selected difficulty
-	// const filteredQuestions = questions.filter(question =>
-	// 	selectedDifficulty === '' || question.getLevel() === selectedDifficulty
-	// );
+	// Only render questions that match the selected difficulty
+	const filteredQuestions = questions.filter(question =>
+		selectedDifficulty === '' || question.getLevel === selectedDifficulty
+	);
 
 	const {question, fetchDifficulty} = getQuestionByDifficulty(quizzId, selectedDifficulty);
 	useEffect(() => {
 		fetchDifficulty();
-	}, [selectedDifficulty]);
-
+	}, []);
 
 
 	//fetch the data on load
@@ -178,7 +178,7 @@ function QuestionList() {
 						<MenuItem value="hard">Hard</MenuItem>
 					</Select>
 				</FormControl>
-			{questions.map((question, index) => (
+			{filteredQuestions.map((question, index) => (
 				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
 					<Typography variant="h6" sx={{ mb: 2 }}>
 						{question.questionText}
