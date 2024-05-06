@@ -62,19 +62,20 @@ function QuestionList() {
 
 	const [selectedDifficulty, setSelectedDifficulty] = useState('');
 
-	const handleDifficultyChange = async (event) => {
+	const handleDifficultyChange = (event) => {
 		setSelectedDifficulty(event.target.value);
-		fetchDifficulty(quizzId, event.target.value);
 	};
+
+	const difficulties = ["", "Easy", "Normal", "Hard"];
 	// Only render questions that match the selected difficulty
 	const filteredQuestions = questions.filter(question =>
-		selectedDifficulty === '' || question.getLevel === selectedDifficulty
+		selectedDifficulty === '' || selectedDifficulty === question.difficulty.level
 	);
 
 	const {question, fetchDifficulty} = getQuestionByDifficulty(quizzId, selectedDifficulty);
 	useEffect(() => {
 		fetchDifficulty();
-	}, []);
+	}, [selectedDifficulty]);
 
 
 	//fetch the data on load
@@ -172,10 +173,9 @@ function QuestionList() {
 						label="Difficulty Level"
 						onChange={handleDifficultyChange}
 					>
-						<MenuItem value="">Any</MenuItem>
-						<MenuItem value="easy">Easy</MenuItem>
-						<MenuItem value="normal">Normal</MenuItem>
-						<MenuItem value="hard">Hard</MenuItem>
+						{difficulties.map((difficulty) => (
+							<MenuItem key={difficulty} value={difficulty}>{difficulty || "Any"}</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 			{filteredQuestions.map((question, index) => (
