@@ -4,13 +4,13 @@ import { useState } from "react";
 const BACKEND_URL = "http://localhost:8080";
 
 // Define a custom React hook that uses useState and fetches data
-export function useGetPublishedQuizzes(selectedCategory) {
+export function useGetPublishedQuizzes() {
 	const [quizz, setQuizz] = useState([]);
 
 	// Define an async function to fetch quizzes
 	const fetchQuizzes = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz?published=true&categoryId=${selectedCategory}`);
+			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
@@ -96,16 +96,18 @@ export function getQuestionByDifficulty(quizzId, difficulty) {
 	return { question, fetchDifficulty };
 }
 
-export function getQuizzByCategory() {
+export function getQuizzByCategory(categoryId) {
 	const [categories, setCategories] = useState([]);
 	const fetchCategories = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/category`);
+			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz?category=${categoryId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
 			const data = await response.json();
+			// const category = data.category.name;
 			setCategories(data);
+			console.log('Fetched data:', data); // Log the fetched data
 		} catch (err) {
 			console.error("Fetch error:", err);
 		}

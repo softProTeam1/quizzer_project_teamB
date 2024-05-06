@@ -28,7 +28,7 @@ function PublishedQuizz() {
 	//getting the categoryId from the URL
 	let { categoryId } = useParams();
 
-	const {categories, fetchCategories} = getQuizzByCategory();
+	const {categories, fetchCategories} = getQuizzByCategory(categoryId);
 
 	//fetches categories and quizzes whenever the selectedCategory state changes.
 	useEffect(() => {
@@ -107,10 +107,12 @@ function PublishedQuizz() {
 						onChange={handleCategoryChange}
 					>
 						<MenuItem value="">All categories</MenuItem>
-						{categories.map((category) => (
-							<MenuItem key={category.categoryId} value={category.name}>{category.name}
+						{quizz.map((quiz) => (
+							<MenuItem key={quiz.category.name} value={quiz.category.name}>
+								{quiz.category.name}
 							</MenuItem>
 						))}
+
 					</Select>
 				</FormControl>
 						<AgGridReact
