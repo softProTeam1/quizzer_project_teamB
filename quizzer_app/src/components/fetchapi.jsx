@@ -96,21 +96,23 @@ export function getQuestionByDifficulty(quizzId, difficulty) {
 	return { question, fetchDifficulty };
 }
 
-export function postDifficultyLevel(quizzId, difficulty) {
-	const [question, setQuestion] = useState([]);
-	const fetchDifficulty = async () => {
+export function getQuizzByCategory(categoryId) {
+	const [categories, setCategories] = useState([]);
+	const fetchCategories = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}?difficulty=${difficulty}`);
+			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz?category=${categoryId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
 			const data = await response.json();
-			setQuestion(data);
+			// const category = data.category.name;
+			setCategories(data);
+			console.log('Fetched data:', data); // Log the fetched data
 		} catch (err) {
 			console.error("Fetch error:", err);
 		}
 	};
 
-	return { question, fetchDifficulty };
+	return { categories, fetchCategories };
 }
 
