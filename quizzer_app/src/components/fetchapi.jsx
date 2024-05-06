@@ -4,13 +4,13 @@ import { useState } from "react";
 const BACKEND_URL = "http://localhost:8080";
 
 // Define a custom React hook that uses useState and fetches data
-export function useGetPublishedQuizzes() {
+export function useGetPublishedQuizzes(selectedCategory) {
 	const [quizz, setQuizz] = useState([]);
 
 	// Define an async function to fetch quizzes
 	const fetchQuizzes = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz`);
+			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz?published=true&categoryId=${selectedCategory}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
@@ -97,7 +97,7 @@ export function getQuestionByDifficulty(quizzId, difficulty) {
 }
 
 export function getQuizzByCategory() {
-	const [categories, setCategories] = useState('');
+	const [categories, setCategories] = useState([]);
 	const fetchCategories = async () => {
 		try {
 			const response = await fetch(`${BACKEND_URL}/api/category`);
