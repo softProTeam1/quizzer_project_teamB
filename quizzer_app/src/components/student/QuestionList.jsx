@@ -164,8 +164,8 @@ function QuestionList() {
 			<Typography variant="subtitle1" gutterBottom>
 				{quiz.description}
 			</Typography>
-				<FormControl sx={{ minWidth: 120 }}>
-					<InputLabel id="difficulty-level-label" style={{ width: '200px' }} >Difficulty</InputLabel>
+				<FormControl sx={{ minWidth: 850 }}>
+					<InputLabel id="difficulty-level-label">Difficulty</InputLabel>
 					<Select
 						labelId="difficulty-level-label"
 						id="difficulty-level-select"
@@ -184,7 +184,7 @@ function QuestionList() {
 						{question.questionText}
 					</Typography>
 					<Typography variant="body2" component="div" sx={{ mb: 2 }}>
-						Difficulty: <Chip label={question.difficulty.level} />
+						Difficulty Level: <Chip label={question.difficulty.level} />
 					</Typography>
 					<TextField
 						required
