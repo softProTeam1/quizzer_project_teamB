@@ -141,7 +141,7 @@ function QuestionList() {
 	//calling the http post method from backend
 	const saveAnswer = async (answer) => {
 		try {
-			const response = await fetch("http://localhost:8080/api/answer/add", {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/answer/add`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(answer),

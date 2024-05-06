@@ -10,7 +10,7 @@ export function useGetPublishedQuizzes() {
 	// Define an async function to fetch quizzes
 	const fetchQuizzes = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/quizzer/publishedquizz`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzer/publishedquizz`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
@@ -28,7 +28,7 @@ export function useGetQuestions(quizzId) {
 	const [questions, setQuestions] = useState([]);
 	const fetchQuestions = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questions/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
 			}
@@ -45,7 +45,7 @@ export function useGetAnswerById(quizzId) {
 	const [questions, setAnswers] = useState([]);
 	const fetchAnswersById = async (quizzId) => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questions/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
 			}
@@ -64,7 +64,7 @@ export function getQuizById(quizzId) {
 	// Define an async function to fetch quizzes
 	const fetchQuiz = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/quizzer/quizz/${quizzId}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzer/quizz/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
@@ -82,7 +82,7 @@ export function getQuestionByDifficulty(quizzId) {
 	const [question, setQuestions] = useState([]);
 	const fetchDifficulty = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}?difficulty=${difficulty}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questions/${quizzId}?difficulty=${difficulty}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
