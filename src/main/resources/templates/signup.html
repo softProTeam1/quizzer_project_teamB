@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add user</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" type="text/css"/>
+</head>
+<body>
+<div class="container">
+    <h1>Sign-up</h1>
+    <div class="col-md-4">
+        <form action="#" method="post" th:action="@{/saveuser}" th:object="${signupform}">
+            <div>
+                <label> Username :<input class="form-control" th:field="*{username}" type="text"/></label>
+                <p th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Username Error</p>
+            </div>
+            <div>
+                <label> Email :<input class="form-control" th:field="*{email}" type="email"/></label>
+                <p th:errors="*{email}" th:if="${#fields.hasErrors('email')}">Email Error</p>
+            </div>
+            <div>
+                <label> Password :<input class="form-control" th:field="*{password}" type="password"/></label>
+                <p th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password Error</p>
+            </div>
+
+            <div>
+                <label> Re-type Password: <input class="form-control" th:field="*{passwordCheck}"
+                                                 type="password"/></label>
+                <p th:errors="*{passwordCheck}" th:if="${#fields.hasErrors('passwordCheck')}">Password Match Error</p>
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Signup"></input>
+        </form>
+    </div>
+</div>
+</body>
+</html>
