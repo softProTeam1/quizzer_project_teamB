@@ -10,44 +10,32 @@ import Results from "../quizzes/Results.jsx";
 import {FormControl, InputLabel, MenuItem, Paper, Select} from "@mui/material";
 
 function PublishedQuizz() {
-	const { quizz, fetchQuizzes } = useGetPublishedQuizzes();
 	const [quizzId, setQuizzId] = useState(null);
 	const [selectedCategory, setSelectedCategory] = useState('');
+	const { quizz, fetchQuizzes } = useGetPublishedQuizzes(selectedCategory);
 
 	//updates the state of selectedCategory based on the value selected in an event.
 	const handleCategoryChange = (event) => {
-		setSelectedCategory(event.target.value);
+		const categoryName = event.target.value;
+		setSelectedCategory(categoryName);
 	};
 
-	// const categories = ["", "Easy", "Normal", "Hard"];
+
 	// Only render quizz that match the selected category
-	const filteredQuizz = quizz.filter(quizz =>
-		selectedCategory === '' || selectedCategory === quizz.category.name || selectedCategory === 'All categories'
-	);
+	// Assuming quizz is the state where all quizzes are stored.
+	const filteredQuizz = quizz.filter(q => q.category.name === selectedCategory || selectedCategory === '');
 
 	//getting the categoryId from the URL
 	let { categoryId } = useParams();
 
-	const {categories, fetchCategories} = getQuizzByCategory();
+	const {categories, fetchCategories} = getQuizzByCategory(categoryId);
 
 	//fetches categories and quizzes whenever the selectedCategory state changes.
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				await fetchCategories();  // Assuming this sets categories state
-				await fetchQuizzes(selectedCategory);
-			} catch (error) {
-				console.error('Failed to fetch data:', error);
-			}
-		};
+		fetchCategories();
+		fetchQuizzes(selectedCategory)
+	}, [selectedCategory]);
 
-		fetchData();
-	}, [selectedCategory]); // Ensure all dependencies are listed here if any
-
-
-	// useEffect(() => {
-	// 	fetchQuizzes(); // This function is from custom hook
-	// }, []);
 
 	const [colDefs, setcolDefs] = useState([
 		{
@@ -110,24 +98,25 @@ function PublishedQuizz() {
 			>
 				<Typography variant="h4">Quizzes</Typography>
 				<FormControl sx={{minWidth: 1300}}>
-					<InputLabel id="category-label">Choose a category</InputLabel>
+					<InputLabel id="category-label">Select category</InputLabel>
 					<Select
 						labelId="category-label"
 						id="category-select"
 						value={selectedCategory}
+						label="Category"
 						onChange={handleCategoryChange}
 					>
-						<MenuItem key="" value="">All categories</MenuItem>
-						{Array.isArray(categories) && categories.map((category) => (
-							<MenuItem key={category} value={category.name}>
-								{category.name}
+						<MenuItem value="">All categories</MenuItem>
+						{quizz.map((quiz) => (
+							<MenuItem key={quiz.category.name} value={quiz.category.name}>
+								{quiz.category.name}
 							</MenuItem>
 						))}
+
 					</Select>
 				</FormControl>
-				{/*{filteredQuizz.map((quiz, index) => (*/}
 						<AgGridReact
-							rowData={quizz} // Pass each quiz object as an array element
+							rowData={filteredQuizz} // Pass each quiz object as an array element
 							columnDefs={colDefs}
 							pagination={true}
 							paginationAutoPageSize={true}
@@ -135,7 +124,7 @@ function PublishedQuizz() {
 								params.api.sizeColumnsToFit();
 							}}
 						/>
-				))}
+				))
 			</div>
 		</>
 	);

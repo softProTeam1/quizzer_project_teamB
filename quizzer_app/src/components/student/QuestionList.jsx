@@ -166,7 +166,7 @@ function QuestionList() {
 				{quiz.description}
 			</Typography>
 				<FormControl sx={{ minWidth: 850 }}>
-					<InputLabel id="difficulty-level-label">Difficulty</InputLabel>
+					<InputLabel id="difficulty-level-label">Difficulty Level</InputLabel>
 					<Select
 						labelId="difficulty-level-label"
 						id="difficulty-level-select"
