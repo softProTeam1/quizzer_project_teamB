@@ -1,8 +1,8 @@
 package fi.haagahelia.quizzer.controller;
 
-import fi.haagahelia.quizzer.model.AppUser;
-import fi.haagahelia.quizzer.repository.AppUserRepository;
+import fi.haagahelia.quizzer.model.User;
 import fi.haagahelia.quizzer.repository.SignupForm;
+import fi.haagahelia.quizzer.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class UserController {
     @Autowired
-    private AppUserRepository repository;
+    private UserRepository repository;
 
     @RequestMapping(value = "signup")
     public String addUser(Model model) {
@@ -40,7 +40,7 @@ public class UserController {
                 BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
                 String hashPwd = bc.encode(pwd);
 
-                AppUser newUser = new AppUser();
+                User newUser = new User();
                 newUser.setPasswordHash(hashPwd);
                 newUser.setUsername(signupForm.getUsername());
                 newUser.setEmail(signupForm.getEmail());
