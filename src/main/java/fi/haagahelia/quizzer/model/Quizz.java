@@ -36,6 +36,10 @@ public class Quizz {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
     private List<Question> questions;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private User username;
 
     @ManyToOne
     @JoinColumn(name = "statusId")
@@ -81,6 +85,14 @@ public class Quizz {
     @JsonIgnore
     public List<Question> getQuestion() {
         return questions;
+    }
+
+    public User getUsername() {
+        return username;
+    }
+
+    public void setUsername(User username) {
+        this.username = username;
     }
 
     public Status getStatus() {

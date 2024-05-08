@@ -1,6 +1,9 @@
 package fi.haagahelia.quizzer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "UserTable")
@@ -23,6 +26,10 @@ public class User {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "username")
+    private List<Quizz> quizzes;
 
     public User() {
         super();
@@ -74,6 +81,14 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<Quizz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(List<Quizz> quizzes) {
+        this.quizzes = quizzes;
     }
 
 }
