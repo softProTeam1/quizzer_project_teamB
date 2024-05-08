@@ -58,6 +58,7 @@
         <th>Description</th>
         <th>Category</th>
         <th>Published</th>
+        <th sec:authorize="hasAuthority('TEACHER')"></th>
         <th></th>
         <th></th>
         <th></th>
@@ -69,13 +70,15 @@
         <td th:text="${quizz.description}"></td>
         <td th:text="${quizz.category.getName()}"></td>
         <td th:text="${quizz.status.getStatus()  ? 'Published':'Not published'}"></td>
-        <td><a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning">Edit</a></td>
-        <td><a th:href="@{'/deletequizz/'+${quizz.quizzId}}" class="btn btn-xs btn-danger">Delete</a>
+        <td sec:authorize="hasAuthority('TEACHER')">
+          <a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning">Edit</a></td>
+        <td sec:authorize="hasAuthority('TEACHER')">
+          <a th:href="@{'/deletequizz/'+${quizz.quizzId}}" class="btn btn-xs btn-danger">Delete</a>
         </td>
         <td><a th:href="@{'/questionlist/'+${quizz.quizzId}}" class="btn btn-xs btn-info">See Question</a></td>
       </tr>
     </table>
-    <a href="/addquizz" class="btn btn-primary">Add a Quizz</a>
+    <a sec:authorize="hasAuthority('TEACHER')" href="/addquizz" class="btn btn-primary">Add a Quizz</a>
     <a th:href="@{/login}" class="btn btn-primary">Login</a>
 </body>
 
