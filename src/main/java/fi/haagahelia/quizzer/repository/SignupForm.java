@@ -4,15 +4,15 @@ import jakarta.validation.constraints.*;
 
 public class SignupForm {
     @NotEmpty
-    @Size(min = 5, max = 30)
+    @Size(min = 3, max = 30)
     private String username = "";
 
     @NotEmpty
-    @Size(min = 7, max = 30)
+    @Size(min = 8, max = 30)
     private String password = "";
 
     @NotEmpty
-    @Size(min = 7, max = 30)
+    @Size(min = 8, max = 30)
     private String passwordCheck = "";
 
     @NotEmpty
@@ -28,7 +28,7 @@ public class SignupForm {
     }
 
     @NotEmpty
-    private String role = "USER";
+    private String role = "TEACHER";
 
     public String getUsername() {
         return username;
