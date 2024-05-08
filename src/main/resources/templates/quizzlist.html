@@ -46,8 +46,12 @@
       
       <form th:action="@{/logout}" method="post">
         <a th:href="@{/signup}" class="btn btn-primary">Register</a>
-        <input type="submit" value="Sign Out" class="btn btn-xs btn-danger" />
-      </form>
+        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-primary">Sign in</a>
+  <input sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" type="submit" value="Sign Out" class="btn btn-danger" />
+        <form >
+          
+        
+
     </div>
 
     <table class="table table-striped">
@@ -58,7 +62,7 @@
         <th>Description</th>
         <th>Category</th>
         <th>Published</th>
-        <th sec:authorize="hasAuthority('TEACHER')"></th>
+        <th sec:authorize="hasAuthority('ADMIN')"></th>
         <th></th>
         <th></th>
         <th></th>
@@ -70,16 +74,18 @@
         <td th:text="${quizz.description}"></td>
         <td th:text="${quizz.category.getName()}"></td>
         <td th:text="${quizz.status.getStatus()  ? 'Published':'Not published'}"></td>
-        <td sec:authorize="hasAuthority('TEACHER')">
+        <td sec:authorize="hasAuthority('ADMIN')">
           <a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning">Edit</a></td>
-        <td sec:authorize="hasAuthority('TEACHER')">
+        <td sec:authorize="hasAuthority('ADMIN')">
           <a th:href="@{'/deletequizz/'+${quizz.quizzId}}" class="btn btn-xs btn-danger">Delete</a>
         </td>
         <td><a th:href="@{'/questionlist/'+${quizz.quizzId}}" class="btn btn-xs btn-info">See Question</a></td>
       </tr>
     </table>
-    <a sec:authorize="hasAuthority('TEACHER')" href="/addquizz" class="btn btn-primary">Add a Quizz</a>
-    <a th:href="@{/login}" class="btn btn-primary">Login</a>
+    <a sec:authorize="isAuthenticated()" href="/addquizz" class="btn btn-primary">Add a Quizz</a>
+    <div sec:authorize="isAnonymous()">
+    <a th:href="@{/signup}" >Register</a> or <a th:href="@{/login}">Sign in</a> to add a quiz
+  </div>
 </body>
 
 </html>

@@ -16,7 +16,7 @@ public class SignupForm {
     private String passwordCheck = "";
 
     @NotEmpty
-    @Size(min = 7, max = 30)
+    @Size(max = 30)
     private String email = "";
 
     public String getEmail() {
@@ -28,7 +28,7 @@ public class SignupForm {
     }
 
     @NotEmpty
-    private String role = "TEACHER";
+    private String role = "ADMIN";
 
     public String getUsername() {
         return username;

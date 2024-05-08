@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/saveuser")).permitAll()
                         .requestMatchers(antMatcher("/quizzlist")).permitAll()
                         .requestMatchers(antMatcher("/login")).permitAll()
-                        .requestMatchers(antMatcher("/test1")).permitAll()
+
                         // Swagger documentation paths
                         // antMatcher("/v3/api-docs/**"),
                         // antMatcher("/configuration/ui"),

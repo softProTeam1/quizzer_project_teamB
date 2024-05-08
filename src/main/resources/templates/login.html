@@ -7,7 +7,7 @@
   </head>
   <body>
   <div class="container">
-    <h1>Login</h1>
+    <h1>Sign in</h1>
     <div class="col-md-4">
     <div th:if="${param.error}">Invalid username and password.</div>
     <div th:if="${param.logout}">You have been logged out.</div>
@@ -18,8 +18,8 @@
       <div>
         <label> Password: <input name="password" type="password" /> </label>
       </div>
-      <input type="submit" value="Login" class="btn btn-primary"></input>
-      <a class="btn btn-primary" type="submit" value="Register" th:href="@{/signup}">Register</a>
+      <input type="submit" value="Sign in" class="btn btn-primary"></input>
+      <a class="btn btn-primary" type="submit" value="Cancel" th:href="@{/quizzlist}">Register</a>
     </form>
   </div>
   </div>
