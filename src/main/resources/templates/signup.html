@@ -1,13 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add user</title>
+    <title>Register new user</title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" type="text/css"/>
 </head>
 <body>
 <div class="container">
-    <h1>Sign-up</h1>
+    <h1>Register</h1>
     <div class="col-md-4">
         <form action="#" method="post" th:action="@{/saveuser}" th:object="${signupform}">
             <div>
@@ -29,8 +29,8 @@
                 <p th:errors="*{passwordCheck}" th:if="${#fields.hasErrors('passwordCheck')}">Password Match Error</p>
             </div>
 
-            <input class="btn btn-primary" type="submit" value="register"></input>
-            <input class="btn btn-primary" type="submit" value="login"></input>
+            <input class="btn btn-primary" type="submit" value="Register"></input>
+            <a class="btn btn-primary" th:href="@{/quizzlist}">Cancel</a>
         </form>
     </div>
 </div>
