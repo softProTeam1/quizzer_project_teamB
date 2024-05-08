@@ -3,6 +3,7 @@ package fi.haagahelia.quizzer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -21,29 +23,37 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers(
-                        // The REST API endpoints
-                        antMatcher("/api/**"),
-                        // The error page
-                        antMatcher("/error"),
+
+        http
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(antMatcher("/css/**")).permitAll()
+                        .requestMatchers(antMatcher("/signup")).permitAll()
+                        .requestMatchers(antMatcher("/saveuser")).permitAll()
+                        .requestMatchers(antMatcher("/api/**")).permitAll()
+                        .requestMatchers(antMatcher("/error")).permitAll()
+                        .requestMatchers(antMatcher("/saveuser")).permitAll()
+                        .requestMatchers(antMatcher("/quizzlist")).permitAll()
+                        .requestMatchers(antMatcher("/login")).permitAll()
+                        .requestMatchers(antMatcher("/test1")).permitAll()
                         // Swagger documentation paths
-                        antMatcher("/v3/api-docs/**"),
-                        antMatcher("/configuration/ui"),
-                        antMatcher("/swagger-resources/**"),
-                        antMatcher("/configuration/security"),
-                        antMatcher("/swagger-ui/**"))
-                // Rest of the permitted paths
-                // ...
-                .permitAll()
-                .anyRequest()
-                .authenticated());
-
-        http.formLogin((form) -> form.permitAll());
-        http.logout((logout) -> logout.permitAll());
-        http.cors(Customizer.withDefaults());
-        http.csrf((csrf) -> csrf.ignoringRequestMatchers(antMatcher("/api/**")));
-
+                        // antMatcher("/v3/api-docs/**"),
+                        // antMatcher("/configuration/ui"),
+                        // antMatcher("/swagger-resources/**"),
+                        // antMatcher("/configuration/security"),
+                        // antMatcher("/swagger-ui/**"))
+                        .anyRequest().authenticated())
+                .headers((headers) -> headers
+                        .frameOptions(frameoptions -> frameoptions.disable() // for h2 console
+                        ))
+                .formLogin((formlogin) -> formlogin
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/quizzlist", true)
+                        .permitAll())
+                .logout((logout) -> logout
+                        .permitAll());
+        // http.cors(Customizer.withDefaults());
+        // http.csrf((csrf) -> csrf.ignoringRequestMatchers(antMatcher("/api/**")));
         return http.build();
     }
+
 }

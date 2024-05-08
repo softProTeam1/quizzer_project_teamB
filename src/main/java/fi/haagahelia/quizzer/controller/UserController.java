@@ -1,9 +1,5 @@
 package fi.haagahelia.quizzer.controller;
 
-import fi.haagahelia.quizzer.model.User;
-import fi.haagahelia.quizzer.repository.SignupForm;
-import fi.haagahelia.quizzer.repository.UserRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,12 +9,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import fi.haagahelia.quizzer.model.User;
+import fi.haagahelia.quizzer.repository.SignupForm;
+import fi.haagahelia.quizzer.repository.UserRepository;
+import jakarta.validation.Valid;
+
 @Controller
 public class UserController {
+
     @Autowired
     private UserRepository repository;
 
-    @RequestMapping(value = "signup")
+    @RequestMapping(value = "/login")
+    public String login() {
+        return "login";
+    }
+
+    @RequestMapping(value = "/signup")
     public String addUser(Model model) {
         model.addAttribute("signupform", new SignupForm());
         return "signup";
@@ -27,7 +34,7 @@ public class UserController {
     /**
      * Create new user
      * Check if user already exists & form validation
-     *
+     * 
      * @param signupForm
      * @param bindingResult
      * @return
