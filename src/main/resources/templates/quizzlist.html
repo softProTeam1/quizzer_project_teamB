@@ -44,9 +44,9 @@
 
     <div class="col-md-4" style="float: right; padding: 20px 0; margin-top: -5%; margin-right: -15%">
       
-      <form th:action="@{/logout}" method="post">
-        <a th:href="@{/signup}" class="btn btn-primary">Register</a>
-        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-primary">Sign in</a>
+      <form  th:action="@{/logout}" method="post">
+        <a sec:authorize="isAnonymous()"  th:href="@{/signup}" class="btn btn-primary">Sign up</a>
+        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-primary">Log in</a>
   <input sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" type="submit" value="Sign Out" class="btn btn-danger" />
         <form >
           
@@ -84,7 +84,7 @@
     </table>
     <a sec:authorize="isAuthenticated()" href="/addquizz" class="btn btn-primary">Add a Quizz</a>
     <div sec:authorize="isAnonymous()">
-    <a th:href="@{/signup}" >Register</a> or <a th:href="@{/login}">Sign in</a> to add a quiz
+    <a th:href="@{/signup}" >Sign up</a> or <a th:href="@{/login}">Log in</a> to add a quiz
   </div>
 </body>
 
