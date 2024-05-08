@@ -33,14 +33,13 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/error")).permitAll()
                         .requestMatchers(antMatcher("/saveuser")).permitAll()
                         .requestMatchers(antMatcher("/quizzlist")).permitAll()
-                        .requestMatchers(antMatcher("/login")).permitAll()
-
                         // Swagger documentation paths
-                        // antMatcher("/v3/api-docs/**"),
-                        // antMatcher("/configuration/ui"),
-                        // antMatcher("/swagger-resources/**"),
-                        // antMatcher("/configuration/security"),
-                        // antMatcher("/swagger-ui/**"))
+                        .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(antMatcher("/configuration/ui")).permitAll()
+                        .requestMatchers(antMatcher("/swagger-resources/**")).permitAll()
+                        .requestMatchers(antMatcher("/configuration/security")).permitAll()
+                        .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+
                         .anyRequest().authenticated())
                 .headers((headers) -> headers
                         .frameOptions(frameoptions -> frameoptions.disable() // for h2 console
