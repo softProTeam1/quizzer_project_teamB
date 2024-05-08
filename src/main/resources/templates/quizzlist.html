@@ -43,7 +43,9 @@
     </form>
 
     <div class="col-md-4" style="float: right; padding: 20px 0; margin-top: -5%; margin-right: -15%">
+      
       <form th:action="@{/logout}" method="post">
+        <a th:href="@{/signup}" class="btn btn-primary">Register</a>
         <input type="submit" value="Sign Out" class="btn btn-xs btn-danger" />
       </form>
     </div>
@@ -74,7 +76,6 @@
       </tr>
     </table>
     <a href="/addquizz" class="btn btn-primary">Add a Quizz</a>
-    <a th:href="@{/signup}" class="btn btn-primary">Sign-up</a>
     <a th:href="@{/login}" class="btn btn-primary">Login</a>
 </body>
 

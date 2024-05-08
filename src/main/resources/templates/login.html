@@ -2,9 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Spring Security Quizz App</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" type="text/css"/>
   </head>
-
   <body>
+  <div class="container">
+    <h1>Login</h1>
+    <div class="col-md-4">
     <div th:if="${param.error}">Invalid username and password.</div>
     <div th:if="${param.logout}">You have been logged out.</div>
     <form method="post" th:action="@{/login}">
@@ -14,8 +18,10 @@
       <div>
         <label> Password: <input name="password" type="password" /> </label>
       </div>
-      <div><input type="submit" value="Sign In" /></div>
-      <button><a th:href="@{/signup}">Sign-up</a></button>
+      <input type="submit" value="Login" class="btn btn-primary"></input>
+      <a class="btn btn-primary" type="submit" value="Register" th:href="@{/signup}">Register</a>
     </form>
+  </div>
+  </div>
   </body>
 </html>
