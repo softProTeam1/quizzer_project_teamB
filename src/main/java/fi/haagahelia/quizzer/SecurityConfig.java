@@ -32,7 +32,9 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/api/**")).permitAll()
                         .requestMatchers(antMatcher("/error")).permitAll()
                         .requestMatchers(antMatcher("/saveuser")).permitAll()
+                        //includes everything functions inside quizzlist
                         .requestMatchers(antMatcher("/quizzlist")).permitAll()
+
                         // Swagger documentation paths
                         .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
                         .requestMatchers(antMatcher("/configuration/ui")).permitAll()
@@ -50,8 +52,8 @@ public class SecurityConfig {
                         .permitAll())
                 .logout((logout) -> logout
                         .permitAll());
-        // http.cors(Customizer.withDefaults());
-        // http.csrf((csrf) -> csrf.ignoringRequestMatchers(antMatcher("/api/**")));
+         http.cors(Customizer.withDefaults());
+         http.csrf((csrf) -> csrf.ignoringRequestMatchers(antMatcher("/api/**")));
         return http.build();
     }
 

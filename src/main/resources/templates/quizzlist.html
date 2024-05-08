@@ -58,10 +58,10 @@
 
       <tr>
         <th>Name</th>
-        <th>Create time</th>
         <th>Description</th>
         <th>Category</th>
         <th>Published</th>
+        <th>Added by</th>
         <th sec:authorize="hasAuthority('ADMIN')"></th>
         <th></th>
         <th></th>
@@ -70,10 +70,10 @@
 
       <tr th:each="quizz: ${quizzlist}">
         <td th:text="${quizz.name}"></td>
-        <td th:text="${quizz.getCreationTimeFormatted()}"></td>
         <td th:text="${quizz.description}"></td>
         <td th:text="${quizz.category.getName()}"></td>
         <td th:text="${quizz.status.getStatus()  ? 'Published':'Not published'}"></td>
+        <td th:text="${quizz.getCreationTimeFormatted()}"></td>
         <td sec:authorize="hasAuthority('ADMIN')">
           <a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning">Edit</a></td>
         <td sec:authorize="hasAuthority('ADMIN')">
