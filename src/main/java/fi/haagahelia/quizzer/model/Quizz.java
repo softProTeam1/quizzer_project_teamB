@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,10 +37,22 @@ public class Quizz {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
     private List<Question> questions;
 
+    @JsonIgnore
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = "quizz")
+    private List<Review> reviews; 
+
 
     @ManyToOne
     @JoinColumn(name = "statusId")
     private Status status;
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
