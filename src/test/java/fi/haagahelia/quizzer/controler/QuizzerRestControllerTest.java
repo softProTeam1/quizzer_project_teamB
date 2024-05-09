@@ -13,14 +13,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import fi.haagahelia.quizzer.dto.QuizzDto;
 import fi.haagahelia.quizzer.model.Quizz;
+import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
+import fi.haagahelia.quizzer.repository.StatusRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class QuizzerRestControllerTest {
     @Autowired
     QuizzRepository quizzRepository;
+    @Autowired
+    private StatusRepository statusRepository;
     @Autowired
     private MockMvc mockMvc;
 
@@ -30,7 +35,35 @@ public class QuizzerRestControllerTest {
     void setUp() throws Exception {
         // Make sure that the database is empty before each test
         quizzRepository.deleteAll();
+        statusRepository.deleteAll();
     }
 
     // The test methods go here
+    @Test
+    public void getQuizByIdReturnsPublishedQuizWhenQuizExists() throws Exception {
+        // Arrange
+        Status status = new Status();
+        status.setStatus(true);
+        statusRepository.save(status);
+
+        Quizz quizz = new Quizz();
+
+        quizz.setName("Sample Quiz");
+        quizz.setDescription("A simple quiz for testing");
+        quizz.setStatus(status);
+        quizzRepository.save(quizz);
+
+        this.mockMvc.perform(get("/api/quizzer/quizz/{quizzId}", quizz.getQuizzId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quizzId").value(quizz.getQuizzId()))
+                .andExpect(jsonPath("$.name").value("Sample Quiz"))
+                .andExpect(jsonPath("$.description").value("A simple quiz for testing"));
+    }
 }
+
+// @Test
+// public void getQuizByIdReturnsErrorWhenQuizDoesNotExist() throws Exception {
+// // Act
+// this.mockMvc.perform(get("/api/quizz/1"))
+// // Assert
+// .andExpect(status().isNotFound());

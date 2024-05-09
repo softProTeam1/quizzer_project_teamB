@@ -36,7 +36,6 @@ public class Quizz {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
     private List<Question> questions;
 
-
     @ManyToOne
     @JoinColumn(name = "statusId")
     private Status status;
@@ -78,6 +77,7 @@ public class Quizz {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm");
         return formatter.format(zdt);
     }
+
     @JsonIgnore
     public List<Question> getQuestion() {
         return questions;
