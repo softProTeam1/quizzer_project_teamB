@@ -70,24 +70,22 @@ public class QuizzerRestControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    // @Test
-    // public void getQuizByIdReturnsErrorWhenQuizIsNotPublished() throws Exception {
-    //     // Arrange
-    //     Status statusFalse = new Status();
-    //     statusFalse.setStatus(false);
-    //     statusRepository.save(statusFalse);
+    @Test
+    public void getQuizByIdReturnsErrorWhenQuizIsNotPublished() throws Exception {
+        // Arrange
+        Status statusFalse = new Status();
+        statusFalse.setStatus(false);
+        statusRepository.save(statusFalse);
 
-    //     Quizz quizz = new Quizz();
+        Quizz quizz = new Quizz();
 
-    //     quizz.setName("Sample Quiz");
-    //     quizz.setDescription("A simple quiz for testing");
-    //     quizz.setStatus(statusFalse);
-    //     quizzRepository.save(quizz);
+        quizz.setName("Sample Quiz");
+        quizz.setDescription("A simple quiz for testing");
+        quizz.setStatus(statusFalse);
+        quizzRepository.save(quizz);
 
-    //     this.mockMvc.perform(get("/api/quizzer/quizz/{quizzId}", quizz.getQuizzId()))
-    //             .andExpect(status().isBadRequest()) // Expect HTTP 400
-    //             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
-    //             .andExpect(jsonPath("$.reason").value("Error: Quiz with the provided ID is not published"));
-    // }
+        this.mockMvc.perform(get("/api/quizzer/quizz/{quizzId}", quizz.getQuizzId()))
+                .andExpect(status().isBadRequest()); // Expect HTTP 400
+    }
 
 }
