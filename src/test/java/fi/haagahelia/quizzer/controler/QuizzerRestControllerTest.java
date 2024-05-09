@@ -1,6 +1,7 @@
 package fi.haagahelia.quizzer.controler;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,6 +38,12 @@ public class QuizzerRestControllerTest {
     @BeforeEach
     void setUp() throws Exception {
         // Make sure that the database is empty before each test
+        quizzRepository.deleteAll();
+        statusRepository.deleteAll();
+    }
+
+    @AfterEach
+    void cleanTestDb() throws Exception {
         quizzRepository.deleteAll();
         statusRepository.deleteAll();
     }

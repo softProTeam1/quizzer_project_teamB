@@ -35,7 +35,7 @@ public class QuizzerApplication {
 			log.info("begin data saving to the db");
 
 			// Category example data
-			if (categoryRepository.count() == 0) {
+			if (quizzRepository.count() == 0) {
 
 				Category category1 = new Category("History", "Knowledge about world's history");
 				Category category2 = new Category("Culinary", "Knowledge about world's culinary");
@@ -150,10 +150,9 @@ public class QuizzerApplication {
 					}
 				}
 
-			}else{
+			} else {
 				log.info("there are already example datas so nothing new is added!");
 			}
-
 
 		};
 	}
