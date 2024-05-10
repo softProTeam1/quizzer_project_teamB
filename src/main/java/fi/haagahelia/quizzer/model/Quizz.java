@@ -2,6 +2,8 @@ package fi.haagahelia.quizzer.model;
 
 import java.time.Instant;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.OptionalDouble;
 
 @Entity
 public class Quizz {
@@ -140,6 +143,27 @@ public class Quizz {
     }
     public void setUsername(String username){
         this.username = username;
+    }
+
+
+    // returns the size of the reviews list if it is not null
+    @JsonProperty("reviewCount")
+    public int getReviewCount() {
+        return reviews != null ? reviews.size() : 0;
+    }
+
+    @JsonProperty("ratingAverage")
+    // calculates the average of the ratings
+    public double getRatingAverage() {
+        //  If the reviews list is not empty, it computes the average
+        if (reviews != null && !reviews.isEmpty()) {
+            OptionalDouble average = reviews.stream()
+                    .mapToInt(Review::getRating)
+                    .average();
+            return average.isPresent() ? average.getAsDouble() : 0;
+        }
+        // if the list is empty or null, it returns 0.0
+        return 0;
     }
 
     @JsonIgnore

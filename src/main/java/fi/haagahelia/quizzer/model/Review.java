@@ -88,12 +88,6 @@ public class Review {
 
     public void setReviewTime(Instant reviewTime) {this.reviewTime = reviewTime;}
 
-    public String getReviewTimeFormatted() {
-        ZonedDateTime zdt = reviewTime.atZone(ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm");
-        return formatter.format(zdt);
-    }
-
     public Quizz getQuizz() {
         return quizz;
     }

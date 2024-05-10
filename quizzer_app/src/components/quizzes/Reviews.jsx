@@ -21,6 +21,10 @@ function Reviews() {
         <div>
             <Typography variant="h4">Reviews for Quizz "{quiz.name}"</Typography>
 		<div>
+			<Typography variant="body1" style={{ marginTop: '8px' }}>
+				Reviews: {quiz.reviewCount}, Rating average: {quiz.ratingAverage}/5
+			</Typography>
+			<Rating name="read-only" value={quiz.ratingAverage} readOnly />
                         
 			<Link to={`/quizzer/addreview/quizz/${quizzId}`}>
 				<Button >
