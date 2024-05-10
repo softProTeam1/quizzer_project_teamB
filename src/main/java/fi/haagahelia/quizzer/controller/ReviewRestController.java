@@ -80,7 +80,7 @@ public class ReviewRestController {
             @ApiResponse(responseCode = "404", description = "Quiz ID cannot be found")
     })
 
-    @GetMapping("/{quizzId}")
+    @GetMapping("/allreviews/{quizzId}")
     public List<Review> getReviews(@PathVariable Long quizzId)
     {
         // handle if quizz id is not found
@@ -90,8 +90,8 @@ public class ReviewRestController {
         // handle if quizz id is not publish
         if (!quiz.getStatus().getStatus()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Error: Quiz is not published");
-        } else {
-            return reviewRepository.findByQuizzId(quiz);
         }
+
+        return reviewRepository.findByQuizz(quiz);
     }
 }

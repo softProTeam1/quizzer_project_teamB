@@ -9,6 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 public class Review {
@@ -26,6 +32,9 @@ public class Review {
     @Column(nullable = false)
     private String reviewText;
 
+    // time when the review is created
+    @CreationTimestamp
+    private Instant reviewTime;
     
     @ManyToOne
     @JoinColumn(name = "quizzId")
@@ -75,6 +84,15 @@ public class Review {
         this.reviewText = reviewText;
     }
 
+    public Instant getReviewTime() {return reviewTime;}
+
+    public void setReviewTime(Instant reviewTime) {this.reviewTime = reviewTime;}
+
+    public String getReviewTimeFormatted() {
+        ZonedDateTime zdt = reviewTime.atZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm");
+        return formatter.format(zdt);
+    }
 
     public Quizz getQuizz() {
         return quizz;

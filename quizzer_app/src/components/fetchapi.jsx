@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 // Define BACKEND_URL
 const BACKEND_URL = "http://localhost:8080";
@@ -137,18 +137,22 @@ export function getQuizzById(quizzId){
 }
 
 export function useGetReviews(quizzId) {
-	const [questions, setQuestions] = useState([]);
-	const fetchQuestions = async () => {
+	const [reviews, setReviews] = useState([]);
+	const fetchReviews = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			const response = await fetch(`${BACKEND_URL}/api/review/allreviews/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
 			}
 			const data = await response.json();
-			setQuestions(data);
+			setReviews(data);
 		} catch (err) {
 			console.error("Fetch error:", err);
 		}
 	};
-	return { questions, fetchQuestions };
+	useEffect(() => {
+		fetchReviews();
+	}, [fetchReviews]);
+
+	return { reviews, fetchReviews };
 }

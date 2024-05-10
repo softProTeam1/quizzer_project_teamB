@@ -11,6 +11,6 @@ import java.util.List;
 public interface ReviewRepository  extends CrudRepository<Review, Long> {
     Review findByreviewId(Long reviewId);
 
-    List<Review> findByQuizzId(Quizz quizz);
+    List<Review> findByQuizz(Quizz quizz);
 
 }
