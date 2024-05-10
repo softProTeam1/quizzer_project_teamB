@@ -61,20 +61,22 @@ function QuestionList() {
 	const [answers, setAnswers] = useState(Array(questions.length).fill(""));
 
 	const [selectedDifficulty, setSelectedDifficulty] = useState('');
-	const handleDifficultyChange = async (event) => {
+
+	const handleDifficultyChange = (event) => {
 		setSelectedDifficulty(event.target.value);
-		getQuestionByDifficulty(event.target.value);
 	};
-	// // Only render questions that match the selected difficulty
-	// const filteredQuestions = questions.filter(question =>
-	// 	selectedDifficulty === '' || question.getLevel() === selectedDifficulty
-	// );
+
+	const difficulties = ["", "Easy", "Normal", "Hard"];
+
+	// Only render questions that match the selected difficulty
+	const filteredQuestions = questions.filter(question =>
+		selectedDifficulty === '' || selectedDifficulty === question.difficulty.level
+	);
 
 	const {question, fetchDifficulty} = getQuestionByDifficulty(quizzId, selectedDifficulty);
 	useEffect(() => {
 		fetchDifficulty();
 	}, [selectedDifficulty]);
-
 
 
 	//fetch the data on load
@@ -163,8 +165,8 @@ function QuestionList() {
 			<Typography variant="subtitle1" gutterBottom>
 				{quiz.description}
 			</Typography>
-				<FormControl sx={{ minWidth: 120 }}>
-					<InputLabel id="difficulty-level-label" style={{ width: '200px' }} >Difficulty</InputLabel>
+				<FormControl sx={{ minWidth: 850 }}>
+					<InputLabel id="difficulty-level-label">Difficulty Level</InputLabel>
 					<Select
 						labelId="difficulty-level-label"
 						id="difficulty-level-select"
@@ -172,19 +174,18 @@ function QuestionList() {
 						label="Difficulty Level"
 						onChange={handleDifficultyChange}
 					>
-						<MenuItem value="">Any</MenuItem>
-						<MenuItem value="easy">Easy</MenuItem>
-						<MenuItem value="normal">Normal</MenuItem>
-						<MenuItem value="hard">Hard</MenuItem>
+						{difficulties.map((difficulty) => (
+							<MenuItem key={difficulty} value={difficulty}>{difficulty || "Any"}</MenuItem>
+						))}
 					</Select>
 				</FormControl>
-			{questions.map((question, index) => (
+			{filteredQuestions.map((question, index) => (
 				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
 					<Typography variant="h6" sx={{ mb: 2 }}>
 						{question.questionText}
 					</Typography>
 					<Typography variant="body2" component="div" sx={{ mb: 2 }}>
-						Difficulty: <Chip label={question.difficulty.level} />
+						Difficulty Level: <Chip label={question.difficulty.level} />
 					</Typography>
 					<TextField
 						required
