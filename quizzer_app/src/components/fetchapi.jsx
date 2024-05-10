@@ -150,9 +150,6 @@ export function useGetReviews(quizzId) {
 			console.error("Fetch error:", err);
 		}
 	};
-	useEffect(() => {
-		fetchReviews();
-	}, [fetchReviews]);
 
 	return { reviews, fetchReviews };
 }

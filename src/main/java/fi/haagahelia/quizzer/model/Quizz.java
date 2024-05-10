@@ -158,11 +158,13 @@ public class Quizz {
     public String getRatingAverage() {
         //  If the reviews list is not empty, it computes the average
         if (reviews != null && !reviews.isEmpty()) {
-            OptionalDouble average = reviews.stream()
-                    .mapToInt(Review::getRating)
-                    .average();
+            OptionalDouble average = reviews.stream() // creates a stream from the reviews list.
+                    .mapToInt(Review::getRating) //  transforms each Review object in the stream into an int
+                    .average();// calculates the average of all the ratings
             if (average.isPresent()) {
-                DecimalFormat df = new DecimalFormat("#.#");
+                //  formats numbers using the given pattern
+                //  “#.#”, which means one digit before the decimal point and one digit after the decimal point.
+                DecimalFormat df = new DecimalFormat("#.#"); //
                 return df.format(average.getAsDouble());
             }
         }
