@@ -4,13 +4,26 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
-	getQuizById,
+	getQuestionByDifficulty,
+	getQuizById, useGetAnswerById,
 	useGetPublishedQuizzes,
 	useGetQuestions,
 } from "../fetchapi";
 import Box from "@mui/material/Box";
-import {Container, Paper, Snackbar} from "@mui/material";
+import {
+	Container,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Paper,
+	Select,
+	Snackbar
+} from "@mui/material";
 import {useParams} from "react-router-dom";
+
+function ExpandMoreIcon() {
+	return null;
+}
 
 function QuestionList() {
 	//for stack bar to work *STARTING HERE*
@@ -43,9 +56,26 @@ function QuestionList() {
 	//ACTUALLY getting a single quiz by Id 
 	const { quiz, fetchQuiz} = getQuizById(quizzId);
 	//getting the question from the quizzId 
-	const { questions, fetchQuestions } = useGetQuestions(quizzId); 
+	const { questions, fetchQuestions } = useGetQuestions(quizzId);
 	//Initialize an array of answers with the same length as the questions array
 	const [answers, setAnswers] = useState(Array(questions.length).fill(""));
+
+	const [selectedDifficulty, setSelectedDifficulty] = useState('');
+	const handleDifficultyChange = async (event) => {
+		setSelectedDifficulty(event.target.value);
+		getQuestionByDifficulty(event.target.value);
+	};
+	// // Only render questions that match the selected difficulty
+	// const filteredQuestions = questions.filter(question =>
+	// 	selectedDifficulty === '' || question.getLevel() === selectedDifficulty
+	// );
+
+	const {question, fetchDifficulty} = getQuestionByDifficulty(quizzId, selectedDifficulty);
+	useEffect(() => {
+		fetchDifficulty();
+	}, [selectedDifficulty]);
+
+
 
 	//fetch the data on load
 	useEffect(() => {
@@ -57,7 +87,7 @@ function QuestionList() {
 
 	// Update the specific answer based on the question index
 	const handleInputChange = (e, index) => {
-		const newAnswers = [...answers];
+		const newAnswers = [...answers]; // created new array which is a copy of the answers array with same values
 		newAnswers[index] = { ...newAnswers[index], answerText: e.target.value };
 		setAnswers(newAnswers);
 	};
@@ -71,7 +101,7 @@ function QuestionList() {
 		try {
 			//get answer text and the question text to compare them
 			//if correct
-			if (answer.answerText == question.correctAnswer) {
+			if (answer.answerText.toLowerCase() == question.correctAnswer.toLowerCase())  {
 				//setting the stack bar message
 				setMessage("That is correct, good job!");
 				//setting a single answer to be send to the db
@@ -80,7 +110,7 @@ function QuestionList() {
 					questionId: question.questionId,
 					correctness: true,
 				});
-			} 
+			}
 			//if incorrect
 			else {
 				//setting the stack bar message
@@ -108,7 +138,7 @@ function QuestionList() {
 		}
 	}, [answerToPost]); // Only run the effect when answerToPost changes
 
-	//calling the http post medthod from backend
+	//calling the http post method from backend
 	const saveAnswer = async (answer) => {
 		try {
 			const response = await fetch("http://localhost:8080/api/answer/add", {
@@ -133,31 +163,46 @@ function QuestionList() {
 			<Typography variant="subtitle1" gutterBottom>
 				{quiz.description}
 			</Typography>
+				<FormControl sx={{ minWidth: 120 }}>
+					<InputLabel id="difficulty-level-label" style={{ width: '200px' }} >Difficulty</InputLabel>
+					<Select
+						labelId="difficulty-level-label"
+						id="difficulty-level-select"
+						value={selectedDifficulty}
+						label="Difficulty Level"
+						onChange={handleDifficultyChange}
+					>
+						<MenuItem value="">Any</MenuItem>
+						<MenuItem value="easy">Easy</MenuItem>
+						<MenuItem value="normal">Normal</MenuItem>
+						<MenuItem value="hard">Hard</MenuItem>
+					</Select>
+				</FormControl>
 			{questions.map((question, index) => (
 				<Paper key={index} elevation={2} sx={{ p: 2, mb: 2 }}>
-						<Typography variant="h6" sx={{ mb: 2 }}>
-							{question.questionText}
-						</Typography>
-						<Typography variant="body2" component="div" sx={{ mb: 2 }}>
-							Difficulty level: <Chip label={question.difficulty.level} />
-						</Typography>
-						<TextField
-							required
-							margin="dense"
-							fullWidth
-							label="Your answer"
-							variant="outlined"
-							value={answers[index]?.answerText || ""}
-							onChange={(e) => handleInputChange(e, index)}
-						/>
-						<Button
-							variant="outlined"
-							onClick={() => {
-								checkAnswer(answers[index], question);
-							}}
-						>
-							SUBMIT YOUR ANSWER
-						</Button>
+					<Typography variant="h6" sx={{ mb: 2 }}>
+						{question.questionText}
+					</Typography>
+					<Typography variant="body2" component="div" sx={{ mb: 2 }}>
+						Difficulty: <Chip label={question.difficulty.level} />
+					</Typography>
+					<TextField
+						required
+						margin="dense"
+						fullWidth
+						label="Your answer"
+						variant="outlined"
+						value={answers[index]?.answerText || ""}
+						onChange={(e) => handleInputChange(e, index)}
+					/>
+					<Button
+						variant="outlined"
+						onClick={() => {
+							checkAnswer(answers[index], question);
+						}}
+					>
+						SUBMIT YOUR ANSWER
+					</Button>
 				</Paper>
 			))}
 

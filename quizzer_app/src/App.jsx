@@ -7,6 +7,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PublishedQuizz from "./components/student/PublishedQuizz";
 import QuestionList from "./components/student/QuestionList.jsx";
+import Results from "./components/quizzes/Results.jsx";
 
 function App() {
 	const [value, setValue] = React.useState("one");
@@ -28,6 +29,7 @@ function App() {
 			<Routes>
 				<Route path="/" exact Component={PublishedQuizz} />
 				<Route path="/questions/:quizzId" exact Component={QuestionList} />
+				<Route path="/quizzer/quizz/:quizzId" exact Component={Results} />
 			</Routes>
 		</BrowserRouter>
 	);
