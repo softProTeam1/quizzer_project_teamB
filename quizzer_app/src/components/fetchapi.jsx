@@ -116,3 +116,39 @@ export function getQuizzByCategory(categoryId) {
 	return { categories, fetchCategories };
 }
 
+export function getQuizzById(quizzId){
+	const [quizz, setQuizz] = useState();
+
+	const fetchQuizzById = async () => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/api/quizzer/quizz/${quizzId}`);
+			if (!response.ok) {
+				throw new Error("Network response was not ok: " + response.statusText);
+			}
+			const data = await response.json();
+			// const category = data.category.name;
+			setQuizz(data);
+			console.log('Fetched data:', data); // Log the fetched data
+		} catch (err) {
+			console.error("Fetch error:", err);
+		}
+	};
+	return { quizz, fetchQuizzById };
+}
+
+export function useGetReviews(quizzId) {
+	const [questions, setQuestions] = useState([]);
+	const fetchQuestions = async () => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			if (!response.ok) {
+				throw new Error("Network response was not ok" + response.statusText);
+			}
+			const data = await response.json();
+			setQuestions(data);
+		} catch (err) {
+			console.error("Fetch error:", err);
+		}
+	};
+	return { questions, fetchQuestions };
+}
