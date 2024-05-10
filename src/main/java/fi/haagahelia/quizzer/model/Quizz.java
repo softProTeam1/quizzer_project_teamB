@@ -1,5 +1,6 @@
 package fi.haagahelia.quizzer.model;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
 
@@ -154,16 +155,19 @@ public class Quizz {
 
     @JsonProperty("ratingAverage")
     // calculates the average of the ratings
-    public double getRatingAverage() {
+    public String getRatingAverage() {
         //  If the reviews list is not empty, it computes the average
         if (reviews != null && !reviews.isEmpty()) {
             OptionalDouble average = reviews.stream()
                     .mapToInt(Review::getRating)
                     .average();
-            return average.isPresent() ? average.getAsDouble() : 0;
+            if (average.isPresent()) {
+                DecimalFormat df = new DecimalFormat("#.#");
+                return df.format(average.getAsDouble());
+            }
         }
         // if the list is empty or null, it returns 0.0
-        return 0;
+        return "0.0";
     }
 
     @JsonIgnore
