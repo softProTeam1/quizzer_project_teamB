@@ -96,7 +96,7 @@ function PublishedQuizz() {
 					<div>
 						<Link to={link}>
 							<Button >
-								See Results
+								See Reviews
 							</Button>
 						</Link>
 					</div>

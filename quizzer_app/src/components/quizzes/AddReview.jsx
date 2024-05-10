@@ -33,6 +33,8 @@ function AddReview() {
         } catch (error) {
             console.error("Error:", error);
         }
+     
+
     };
 
     const handleChange = (e) => {
@@ -78,9 +80,11 @@ function AddReview() {
                 rows={4}
                 onChange={handleChange}
             />
+             <Link to={`/quizzer/reviews/quizz/${quizzId}`}>
             <Button onClick={handleSubmit}>
                 Submit Review
             </Button>
+            </Link>
             <Link to={`/quizzer/reviews/quizz/${quizzId}`}>
                 <Button >
                     cancel
