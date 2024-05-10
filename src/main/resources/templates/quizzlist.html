@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
 
 <head>
@@ -75,11 +75,11 @@
     <td th:text="${quizz.category.getName()}"></td>
     <td th:text="${quizz.status.getStatus()  ? 'Published':'Not published'}"></td>
     <td th:utext="${quizz.getUsername()} + ' on '+'<br />'+${quizz.getCreationTimeFormatted()}"></td>
-    <td sec:authorize="hasAuthority('ADMIN')">
-      <a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning">Edit</a>
+    <td sec:authorize="isAuthenticated()">
+      <a th:href="@{/editquizz/{id}(id=${quizz.quizzId})}" class="btn btn-xs btn-warning" th:if="${#authentication.name == quizz.getUsername()}">Edit</a>
     </td>
-    <td sec:authorize="hasAuthority('ADMIN')">
-      <a th:href="@{'/deletequizz/'+${quizz.quizzId}}" class="btn btn-xs btn-danger">Delete</a>
+    <td sec:authorize="isAuthenticated()">
+      <a th:href="@{'/deletequizz/'+${quizz.quizzId}}" class="btn btn-xs btn-danger" th:if="${#authentication.name == quizz.getUsername()}">Delete</a>
     </td>
     <td><a th:href="@{'/questionlist/'+${quizz.quizzId}}" class="btn btn-xs btn-info">See Question</a></td>
   </tr>
