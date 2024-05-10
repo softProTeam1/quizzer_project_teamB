@@ -12,6 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -97,6 +99,9 @@ public class QuizzerController {
     // save quizz for add function
     @PostMapping(value = "/savequizz")
     public String save(Quizz quizz) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
+        quizz.setUsername(username);
         quizzRepository.save(quizz);
         return "redirect:/quizzlist";
     }
