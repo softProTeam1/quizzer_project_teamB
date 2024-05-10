@@ -35,6 +35,9 @@ function Reviews() {
 				<Typography color="textSecondary">
 					Written on {dayjs(review.reviewTime).format('MMMM D, YYYY')}
 				</Typography>
+				<Typography>
+					Rating: {review.rating}/5
+				</Typography>
 				<Rating name="read-only" value={review.rating} readOnly />
 				<Typography variant="body2" style={{ marginTop: '8px' }}>
 					{review.reviewText}
