@@ -45,6 +45,8 @@ public class Quizz {
     @JoinColumn(name = "categoryId")
     private Category category;
 
+    private String username;
+
     public Quizz() {
     }
 
@@ -90,6 +92,9 @@ public class Quizz {
     public Category getCategory() {
         return category;
     }
+    public String getUsername(){
+        return username;
+    }
 
     // setter
     public void setQuizzId(Long quizzId) {
@@ -119,6 +124,9 @@ public class Quizz {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    public void setUsername(String username){
+        this.username = username;
     }
 
     @JsonIgnore
