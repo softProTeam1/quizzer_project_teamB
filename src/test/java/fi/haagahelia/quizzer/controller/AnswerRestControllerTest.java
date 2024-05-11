@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.haagahelia.quizzer.dto.AnswerRequestDto;
 import fi.haagahelia.quizzer.model.Answer;
 import fi.haagahelia.quizzer.repository.AnswerRepository;
+import fi.haagahelia.quizzer.repository.QuestionRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AnswerRestControllerTest {
     @Autowired
     AnswerRepository answerRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -92,8 +96,8 @@ public class AnswerRestControllerTest {
 
     }
 
-    //unpublished quizzes: 3 and 4 
-    //questionId for quiz3:7,8,9
+    // unpublished quizzes: 3 and 4
+    // questionId for quiz3:7,8,9
     @Test
     public void createAnswerDoesNotSaveAnswerForNonPublishedQuiz() throws Exception {
         // Arrange
@@ -110,4 +114,32 @@ public class AnswerRestControllerTest {
         assertEquals(0, answers.size());
 
     }
+
+    @Test
+    public void getAllAnswerInAQuizTest() throws Exception {
+        // Arrange
+        Long questionId = (long) 1;
+        AnswerRequestDto answerDTO1 = new AnswerRequestDto("test answer 1", questionId);
+        AnswerRequestDto answerDTO2 = new AnswerRequestDto("test answer 2", questionId);
+        answerDTO2.setCorrectness(true);
+        Answer answer1 = new Answer(answerDTO1.getAnswerText(), answerDTO1.getCorrectness());
+        answer1.setQuestion(questionRepository.findById(questionId).orElseThrow());
+        Answer answer2 = new Answer(answerDTO2.getAnswerText(), answerDTO2.getCorrectness());
+        answer2.setQuestion(questionRepository.findById(questionId).orElseThrow());
+        answerRepository.saveAll(List.of(answer1, answer2));
+
+        // Act
+        this.mockMvc.perform(get("/api/answer/quiz/" + answer1.getQuestion().getQuizz().getQuizzId()))
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$.[0].answerText").value("test answer 1"))
+                .andExpect(jsonPath("$.[0].answerId").value(answer1.getAnswerId()))
+                .andExpect(jsonPath("$.[0].correctness").value(false))
+                .andExpect(jsonPath("$.[1].answerText").value("test answer 2"))
+                .andExpect(jsonPath("$.[1].correctness").value(true))
+                .andExpect(jsonPath("$.[1].answerId").value(answer2.getAnswerId()));
+
+    }
+
 }
