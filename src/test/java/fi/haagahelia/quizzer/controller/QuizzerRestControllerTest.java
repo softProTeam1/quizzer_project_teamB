@@ -6,57 +6,51 @@ import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
-import fi.haagahelia.quizzer.repository.DifficultyRepository;
-import fi.haagahelia.quizzer.repository.QuestionRepository;
-import fi.haagahelia.quizzer.repository.AnswerRepository;
-import fi.haagahelia.quizzer.repository.UserRepository;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(QuizzerRestController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class QuizzerRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private UserRepository userRepository;
-
-    @MockBean
+    @Autowired
     private QuizzRepository quizzRepository;
 
-    @MockBean
-    private QuestionRepository questionRepository;
-
-    @MockBean
+    @Autowired
     private StatusRepository statusRepository;
 
-    @MockBean
+    @Autowired
     private CategoryRepository categoryRepository;
 
-    @MockBean
-    private DifficultyRepository difficultyRepository;
+    ObjectMapper mapper = new ObjectMapper();
 
-    @MockBean
-    private AnswerRepository answerRepository;
+    @BeforeEach
+    void setUp() throws Exception {
+        quizzRepository.deleteAll();
+        statusRepository.deleteAll();
+        categoryRepository.deleteAll();
+
+    }
 
     @Test
     public void getAllQuizzesReturnsEmptyListWhenNoQuizzesExist() throws Exception {
@@ -70,70 +64,94 @@ public class QuizzerRestControllerTest {
     @Test
     public void getAllQuizzesReturnsListOfPublishedQuizzesWhenQuizzesExist() throws Exception {
         // Arrange
-        // Create a published status
+
         Status publishedStatus = new Status(true);
         statusRepository.save(publishedStatus);
 
-        // Create a non-published status
         Status nonPublishedStatus = new Status(false);
         statusRepository.save(nonPublishedStatus);
 
-        // Create a category
         Category category = new Category("Test Category Name", "Test Category Description");
         categoryRepository.save(category);
 
-        // Save a few quizzes (both published and non-published)
         Quizz publishedQuizz1 = new Quizz("Published Quizz 1", "Description", publishedStatus, category);
         Quizz publishedQuizz2 = new Quizz("Published Quizz 2", "Description", publishedStatus, category);
         Quizz nonPublishedQuizz = new Quizz("Non-Published Quizz", "Description", nonPublishedStatus, category);
         quizzRepository.saveAll(List.of(publishedQuizz1, publishedQuizz2, nonPublishedQuizz));
 
         // Act
-        // Send a request to retrieve all quizzes
+
         this.mockMvc.perform(get("/api/quizzer"))
                 // Assert
                 .andExpect(status().isOk())
-                // Verify that the response contains a list of the saved published quizzes
-                .andExpect(jsonPath("$", hasSize(2)))
+
+                .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].name").value("Published Quizz 1"))
-                .andExpect(jsonPath("$[0].id").value(publishedQuizz1.getQuizzId()))
+                .andExpect(jsonPath("$[0].quizzId").value(publishedQuizz1.getQuizzId()))
 
                 .andExpect(jsonPath("$[1].name").value("Published Quizz 2"))
-                .andExpect(jsonPath("$[1].id").value(publishedQuizz2.getQuizzId()))
+                .andExpect(jsonPath("$[1].quizzId").value(publishedQuizz2.getQuizzId()))
 
                 .andExpect(jsonPath("$[2].name", not(hasItem("Non-Published Quizz"))))
-                .andExpect(jsonPath("$[2].id").value(nonPublishedQuizz.getQuizzId()));
+                .andExpect(jsonPath("$[2].quizzId").value(nonPublishedQuizz.getQuizzId()));
 
     }
 
-    // Test method for success case of category filtering
     @Test
-    public void getPublishedQuizzByCategoryReturnsQuizzesWhenCategoryExists() throws Exception {
-        // Mock category and quizzes data
+    public void getQuizzByIdReturnsQuizWhenIdExists() throws Exception {
+        // Arrange
         Category category = new Category("Test Category Name", "Test Category Description");
-        Quizz quiz1 = new Quizz("Quiz 1", "Description 1", new Status(true), category);
-        Quizz quiz2 = new Quizz("Quiz 2", "Description 2", new Status(true), category);
-        List<Quizz> quizzes = List.of(quiz1, quiz2);
+        categoryRepository.save(category);
 
-        // Mock behavior of quizzRepository.findByStatusAndCategory
-        when(quizzRepository.findByStatusAndCategory(any(Status.class), any(Category.class))).thenReturn(quizzes);
+        Status status = new Status(true);
+        statusRepository.save(status);
 
-        // Perform GET request with category parameter
-        mockMvc.perform(get("/api/quizzer/publishedquizz?category=1"))
+        Quizz quiz = new Quizz("Quiz 1", "Description 1", status, category);
+        quizzRepository.save(quiz);
+
+        // Act
+        mockMvc.perform(get("/api/quizzer/quizz/" + quiz.getQuizzId()))
+                // Assert
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Quiz 1")))
-                .andExpect(jsonPath("$[1].name", is("Quiz 2")));
+                .andExpect(jsonPath("$.name", is("Quiz 1")))
+                .andExpect(jsonPath("$.description", is("Description 1")));
     }
 
-    // Test method for error case of category filtering when category does not exist
     @Test
-    public void getPublishedQuizzByCategoryReturnsNotFoundWhenCategoryDoesNotExist() throws Exception {
-        // Mock behavior of categoryRepository.findById
-        when(categoryRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+    public void getQuizzByIdReturnsNotFoundWhenIdDoesNotExist() throws Exception {
 
-        // Perform GET request with non-existing category parameter
-        mockMvc.perform(get("/api/quizzer/publishedquizz?category=999"))
+        // Act
+        mockMvc.perform(get("/api/quizzer/quizz/1"))
+                // Assert
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getQuizzByCategoryReturnsQuizWhenCategoryExists() throws Exception {
+        // Arrange
+        Category category = new Category("Test Category Name", "Test Category Description");
+        categoryRepository.save(category);
+
+        Status status = new Status(true);
+        statusRepository.save(status);
+
+        Quizz quiz = new Quizz("Quiz 1", "Description 1", status, category);
+        quizzRepository.save(quiz);
+
+        // Act
+        mockMvc.perform(get("/api/quizzer/publishedquizz?category=" + category.getCategoryId()))
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is("Quiz 1")))
+                .andExpect(jsonPath("$[0].description", is("Description 1")));
+    }
+
+    @Test
+    public void getQuizzByCategoryReturnsNotFoundWhenCategoryDoesNotExist() throws Exception {
+
+        // Act
+        mockMvc.perform(get("/api/quizzer/publishedquizz?category=1"))
+                // Assert
                 .andExpect(status().isNotFound());
     }
 
