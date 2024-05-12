@@ -13,7 +13,6 @@ Another for students to take different quizzes.
 - Blazej Goszczynski, Github link:<https://github.com/Blazej3>
 - Hong Phan, Github link:<https://github.com/Janphan>
 - Thien Nguyen, Github link:<https://github.com/makotosoul>
-- Vermilion Sovern (Nojus Klimovas), Github link:<https://github.com/Veyefill>
 
 ## Architecture
 
