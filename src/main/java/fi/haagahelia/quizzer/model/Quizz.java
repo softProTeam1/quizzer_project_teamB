@@ -1,7 +1,10 @@
 package fi.haagahelia.quizzer.model;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.OptionalDouble;
 
 @Entity
 public class Quizz {
@@ -57,6 +61,8 @@ public class Quizz {
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;
+
+    private String username;
 
     public Quizz() {
     }
@@ -103,6 +109,9 @@ public class Quizz {
     public Category getCategory() {
         return category;
     }
+    public String getUsername(){
+        return username;
+    }
 
     // setter
     public void setQuizzId(Long quizzId) {
@@ -132,6 +141,35 @@ public class Quizz {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+
+    // returns the size of the reviews list if it is not null
+    @JsonProperty("reviewCount")
+    public int getReviewCount() {
+        return reviews != null ? reviews.size() : 0;
+    }
+
+    @JsonProperty("ratingAverage")
+    // calculates the average of the ratings
+    public String getRatingAverage() {
+        //  If the reviews list is not empty, it computes the average
+        if (reviews != null && !reviews.isEmpty()) {
+            OptionalDouble average = reviews.stream() // creates a stream from the reviews list.
+                    .mapToInt(Review::getRating) //  transforms each Review object in the stream into an int
+                    .average();// calculates the average of all the ratings
+            if (average.isPresent()) {
+                //  formats numbers using the given pattern
+                //  “#.#”, which means one digit before the decimal point and one digit after the decimal point.
+                DecimalFormat df = new DecimalFormat("#.#"); //
+                return df.format(average.getAsDouble());
+            }
+        }
+        // if the list is empty or null, it returns 0.0
+        return "0.0";
     }
 
     @JsonIgnore

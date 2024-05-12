@@ -3,6 +3,10 @@ package fi.haagahelia.quizzer.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.haagahelia.quizzer.model.Question;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -66,5 +70,28 @@ public class ReviewRestController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete reviews.");
         }
+    }
+
+    @Operation(summary = "Get all reviews by quizz ID", description = "Returns all reviews of a quizz by ID")
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Reviews retrieved successfully"),
+            @ApiResponse(responseCode = "403", description = "Quiz is not published"),
+            @ApiResponse(responseCode = "404", description = "Quiz ID cannot be found")
+    })
+
+    @GetMapping("/allreviews/{quizzId}")
+    public List<Review> getReviews(@PathVariable Long quizzId)
+    {
+        // handle if quizz id is not found
+        Quizz quiz = quizzRepository.findById(quizzId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Quiz ID cannot be found"));
+
+        // handle if quizz id is not publish
+        if (!quiz.getStatus().getStatus()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Error: Quiz is not published");
+        }
+
+        return reviewRepository.findByQuizz(quiz);
     }
 }

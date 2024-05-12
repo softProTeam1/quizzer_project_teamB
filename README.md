@@ -13,7 +13,6 @@ Another for students to take different quizzes.
 - Blazej Goszczynski, Github link:<https://github.com/Blazej3>
 - Hong Phan, Github link:<https://github.com/Janphan>
 - Thien Nguyen, Github link:<https://github.com/makotosoul>
-- Vermilion Sovern (Nojus Klimovas), Github link:<https://github.com/Veyefill>
 
 ## Architecture
 
@@ -86,38 +85,63 @@ erDiagram
     QUIZZ ||--o{ QUESTION : includes
     QUIZZ }o--|| STATUS : has
     QUESTION }|--|| DIFFICULTY : has
+    QUESTION }|--|| ANSWER : has
+    QUIZZ }|--|| REVIEW : has
+    USER }o--|| QUIZZ : has
 
     CATEGORIES {
-        int categoryId PK
+        Long categoryId PK
         string name
         string description
     }
 
     QUIZZ {
-        int quizId PK
+        Long quizId PK
         string name
         string description
         Instant createdAt
-        int statusId FK
-        int categoryId FK
+        Long statusId FK
+        Long categoryId FK
     }
 
     QUESTION {
-        int questionId PK
+        Long questionId PK
         string questionText
         string correctAnswer
         int difficultyId
     }
 
     STATUS {
-        int statusId PK
+        Long statusId PK
         boolean status
     }
 
     DIFFICULTY {
-        int difficultyId PK
+        Long difficultyId PK
         string level
     }
+    
+    ANSWER {
+        Long answerId PK
+        string answerText
+        boolean correctness
+        Long questionId FK
+    }
+    REVIEW {
+        Long reviewId PK
+        string nickname
+        string reviewText
+        Instant reviewTime
+        Long quizzId FK
+    }
+    
+    USER {
+    Long id PK
+    String username
+    String passwordHash
+    String role
+    }
+    
 ```
 
 ## Frontend Deployment Instructions
