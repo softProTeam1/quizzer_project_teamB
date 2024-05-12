@@ -42,9 +42,8 @@ public class Quizz {
     private List<Question> questions;
 
     @JsonIgnore
-    @OneToMany( cascade = CascadeType.ALL, mappedBy = "quizz")
-    private List<Review> reviews; 
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizz")
+    private List<Review> reviews;
 
     @ManyToOne
     @JoinColumn(name = "statusId")
@@ -97,6 +96,7 @@ public class Quizz {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm");
         return formatter.format(zdt);
     }
+
     @JsonIgnore
     public List<Question> getQuestion() {
         return questions;
@@ -109,7 +109,8 @@ public class Quizz {
     public Category getCategory() {
         return category;
     }
-    public String getUsername(){
+
+    public String getUsername() {
         return username;
     }
 
@@ -142,10 +143,10 @@ public class Quizz {
     public void setCategory(Category category) {
         this.category = category;
     }
-    public void setUsername(String username){
+
+    public void setUsername(String username) {
         this.username = username;
     }
-
 
     // returns the size of the reviews list if it is not null
     @JsonProperty("reviewCount")
@@ -156,14 +157,15 @@ public class Quizz {
     @JsonProperty("ratingAverage")
     // calculates the average of the ratings
     public String getRatingAverage() {
-        //  If the reviews list is not empty, it computes the average
+        // If the reviews list is not empty, it computes the average
         if (reviews != null && !reviews.isEmpty()) {
             OptionalDouble average = reviews.stream() // creates a stream from the reviews list.
-                    .mapToInt(Review::getRating) //  transforms each Review object in the stream into an int
+                    .mapToInt(Review::getRating) // transforms each Review object in the stream into an int
                     .average();// calculates the average of all the ratings
             if (average.isPresent()) {
-                //  formats numbers using the given pattern
-                //  “#.#”, which means one digit before the decimal point and one digit after the decimal point.
+                // formats numbers using the given pattern
+                // “#.#”, which means one digit before the decimal point and one digit after the
+                // decimal point.
                 DecimalFormat df = new DecimalFormat("#.#"); //
                 return df.format(average.getAsDouble());
             }

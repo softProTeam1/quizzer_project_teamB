@@ -150,10 +150,9 @@ public class QuizzerApplication {
 					}
 				}
 
-			}else{
+			} else {
 				log.info("there are already example datas so nothing new is added!");
 			}
-
 
 		};
 	}
