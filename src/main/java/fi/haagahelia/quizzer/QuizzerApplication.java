@@ -74,7 +74,7 @@ public class QuizzerApplication {
 								status2, category1);
 						Quizz quizz4 = new Quizz("Korean Songs and Dramas",
 								"A comprehensive quiz about the well-known songs and dramas of Korea. Perfect for fans of Korea!",
-								status2, category4);
+								status1, category4);
 
 						// save example data to the db
 						quizzRepository.save(quizz1);
