@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // Define BACKEND_URL
 const BACKEND_URL = "http://localhost:8080";
-
+z
 // Define a custom React hook that uses useState and fetches data
 export function useGetPublishedQuizzes() {
 	const [quizz, setQuizz] = useState([]);
