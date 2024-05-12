@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,78 +37,75 @@ public class QuizzerRestControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private QuizzRepository quizzRepository;
-    
+
     @MockBean
     private QuestionRepository questionRepository;
-    
+
     @MockBean
     private StatusRepository statusRepository;
-    
+
     @MockBean
     private CategoryRepository categoryRepository;
-    
+
     @MockBean
     private DifficultyRepository difficultyRepository;
 
     @MockBean
     private AnswerRepository answerRepository;
-    
 
     @Test
     public void getAllQuizzesReturnsEmptyListWhenNoQuizzesExist() throws Exception {
         // Act
         this.mockMvc.perform(get("/api/quizzer"))
-        // Assert
+                // Assert
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
- 
+    @Test
+    public void getAllQuizzesReturnsListOfPublishedQuizzesWhenQuizzesExist() throws Exception {
+        // Arrange
+        // Create a published status
+        Status publishedStatus = new Status(true);
+        statusRepository.save(publishedStatus);
 
-@Test
-public void getAllQuizzesReturnsListOfPublishedQuizzesWhenQuizzesExist() throws Exception {
-    // Arrange
-    // Create a published status
-    Status publishedStatus = new Status(true);
-    statusRepository.save(publishedStatus);
+        // Create a non-published status
+        Status nonPublishedStatus = new Status(false);
+        statusRepository.save(nonPublishedStatus);
 
-    // Create a non-published status
-    Status nonPublishedStatus = new Status(false);
-    statusRepository.save(nonPublishedStatus);
+        // Create a category
+        Category category = new Category("Test Category Name", "Test Category Description");
+        categoryRepository.save(category);
 
-    // Create a category
-    Category category = new Category("Test Category Name","Test Category Description");
-    categoryRepository.save(category);
+        // Save a few quizzes (both published and non-published)
+        Quizz publishedQuizz1 = new Quizz("Published Quizz 1", "Description", publishedStatus, category);
+        Quizz publishedQuizz2 = new Quizz("Published Quizz 2", "Description", publishedStatus, category);
+        Quizz nonPublishedQuizz = new Quizz("Non-Published Quizz", "Description", nonPublishedStatus, category);
+        quizzRepository.saveAll(List.of(publishedQuizz1, publishedQuizz2, nonPublishedQuizz));
 
-    // Save a few quizzes (both published and non-published)
-    Quizz publishedQuizz1 = new Quizz("Published Quizz 1", "Description", publishedStatus, category);
-    Quizz publishedQuizz2 = new Quizz("Published Quizz 2", "Description", publishedStatus, category);
-    Quizz nonPublishedQuizz = new Quizz("Non-Published Quizz", "Description", nonPublishedStatus, category);
-    quizzRepository.saveAll(List.of(publishedQuizz1, publishedQuizz2, nonPublishedQuizz));
+        // Act
+        // Send a request to retrieve all quizzes
+        this.mockMvc.perform(get("/api/quizzer"))
+                // Assert
+                .andExpect(status().isOk())
+                // Verify that the response contains a list of the saved published quizzes
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name").value("Published Quizz 1"))
+                .andExpect(jsonPath("$[0].id").value(publishedQuizz1.getQuizzId()))
 
-    // Act
-    // Send a request to retrieve all quizzes
-    this.mockMvc.perform(get("/api/quizzer"))
-    // Assert
-            .andExpect(status().isOk())
-            // Verify that the response contains a list of the saved published quizzes
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].name").value("Published Quizz 1"))
-            .andExpect(jsonPath("$[0].id").value(publishedQuizz1.getQuizzId()))
+                .andExpect(jsonPath("$[1].name").value("Published Quizz 2"))
+                .andExpect(jsonPath("$[1].id").value(publishedQuizz2.getQuizzId()))
 
-            .andExpect(jsonPath("$[1].name").value("Published Quizz 2"))
-            .andExpect(jsonPath("$[1].id").value(publishedQuizz2.getQuizzId()))
+                .andExpect(jsonPath("$[2].name", not(hasItem("Non-Published Quizz"))))
+                .andExpect(jsonPath("$[2].id").value(nonPublishedQuizz.getQuizzId()));
 
-            .andExpect(jsonPath("$[2].name", not(hasItem("Non-Published Quizz"))))
-            .andExpect(jsonPath("$[2].id").value(nonPublishedQuizz.getQuizzId()));
+    }
 
-}
-
-// Test method for success case of category filtering
+    // Test method for success case of category filtering
     @Test
     public void getPublishedQuizzByCategoryReturnsQuizzesWhenCategoryExists() throws Exception {
         // Mock category and quizzes data
-        Category category = new Category("Test Category Name","Test Category Description");
+        Category category = new Category("Test Category Name", "Test Category Description");
         Quizz quiz1 = new Quizz("Quiz 1", "Description 1", new Status(true), category);
         Quizz quiz2 = new Quizz("Quiz 2", "Description 2", new Status(true), category);
         List<Quizz> quizzes = List.of(quiz1, quiz2);
@@ -135,6 +131,5 @@ public void getAllQuizzesReturnsListOfPublishedQuizzesWhenQuizzesExist() throws 
         mockMvc.perform(get("/api/quizzer/publishedquizz?category=999"))
                 .andExpect(status().isNotFound());
     }
-
 
 }
