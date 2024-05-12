@@ -42,12 +42,6 @@ public class QuizzerRestControllerTest {
         statusRepository.deleteAll();
     }
 
-    @AfterEach
-    void cleanTestDb() throws Exception {
-        quizzRepository.deleteAll();
-        statusRepository.deleteAll();
-    }
-
     // The test methods go here
     @Test
     public void getQuizByIdReturnsPublishedQuizWhenQuizExists() throws Exception {
