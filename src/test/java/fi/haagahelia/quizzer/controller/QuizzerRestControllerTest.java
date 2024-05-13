@@ -155,4 +155,88 @@ public class QuizzerRestControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+
+    @Test
+    public void getAllCategoriesReturnsEmptyListWhenNoCategoriesExist() throws Exception {
+
+        // Act
+        this.mockMvc.perform(get("/api/category"))
+
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void getAllCategoriesReturnsListOfCategoriesWhenCategoryExist() throws Exception {
+
+        // Arrange
+        Category category1 = new Category("Test Category Name 1", "Test Category Description");
+        Category category2 = new Category("Test Category Name 2", "Test Category Description");
+        Category category3 = new Category("Test Category Name 3", "Test Category Description");
+        categoryRepository.saveAll(List.of(category1, category2, category3));
+
+        // Act
+        this.mockMvc.perform(get("/api/category"))
+
+                // Assert
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].name").value("Test Category Name 1"))
+                .andExpect(jsonPath("$[0].description").value("Test Category Description"))
+
+                .andExpect(jsonPath("$[1].name").value("Test Category Name 2"))
+                .andExpect(jsonPath("$[1].description").value("Test Category Description"))
+
+                .andExpect(jsonPath("$[2].name", not(hasItem("Test Category Name 3"))))
+                .andExpect(jsonPath("$[2].description").value("Test Category Description"));
+    }
+
+     @Test
+     public void getQuizByIdReturnsPublishedQuizWhenQuizExists() throws Exception {
+         // Arrange
+         Status status = new Status();
+         status.setStatus(true);
+         statusRepository.save(status);
+ 
+         Quizz quizz = new Quizz();
+ 
+         quizz.setName("Sample Quiz");
+         quizz.setDescription("A simple quiz for testing");
+         quizz.setStatus(status);
+         quizzRepository.save(quizz);
+ 
+         this.mockMvc.perform(get("/api/quizzer/quizz/{quizzId}", quizz.getQuizzId()))
+                 .andExpect(status().isOk())
+                 .andExpect(jsonPath("$.quizzId").value(quizz.getQuizzId()))
+                 .andExpect(jsonPath("$.name").value("Sample Quiz"))
+                 .andExpect(jsonPath("$.description").value("A simple quiz for testing"));
+     }
+ 
+     @Test
+     public void getQuizByIdReturnsErrorWhenQuizDoesNotExist() throws Exception {
+         // Act and Assert
+         this.mockMvc.perform(get("/api/quizzer/quizz/{quizzId}", 999))
+                 .andExpect(status().isNotFound());
+     }
+ 
+     @Test
+     public void getQuizByIdReturnsErrorWhenQuizIsNotPublished() throws Exception {
+         // Arrange
+         Status statusFalse = new Status();
+         statusFalse.setStatus(false);
+         statusRepository.save(statusFalse);
+ 
+         Quizz quizz = new Quizz();
+ 
+         quizz.setName("Sample Quiz");
+         quizz.setDescription("A simple quiz for testing");
+         quizz.setStatus(statusFalse);
+         quizzRepository.save(quizz);
+ 
+         this.mockMvc.perform(get("/api/quizzer/quizz/{quizzId}", quizz.getQuizzId()))
+                 .andExpect(status().isBadRequest()); // Expect HTTP 400
+     }
+ 
 }
