@@ -48,7 +48,7 @@ export function useGetAnswerById(quizzId) {
 	const [questions, setAnswers] = useState([]);
 	const fetchAnswersById = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/questions/${quizzId}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questions/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
 			}
