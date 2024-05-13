@@ -1,10 +1,7 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.Comparator;
 import java.util.List;
 
-import fi.haagahelia.quizzer.model.Quizz;
-import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import fi.haagahelia.quizzer.model.Category;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/category")
@@ -26,10 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class CategoryRestController {
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private StatusRepository statusRepository;
-    @Autowired
-    private QuizzRepository quizzRepository;
 
     @Operation(summary = "List all categories",
             description = "Retrieves a list of all categories sorted in ascending order by their names.")

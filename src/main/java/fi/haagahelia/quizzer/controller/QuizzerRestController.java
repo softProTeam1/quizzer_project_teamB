@@ -51,7 +51,6 @@ public class QuizzerRestController {
     })
 
     // list quiz by Id
-    @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
     @GetMapping("/quizz/{quizzId}")
     public Quizz getQuizById(@PathVariable Long quizzId) {
         // get the quizz by quizzId
