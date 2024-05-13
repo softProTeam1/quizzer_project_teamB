@@ -1,9 +1,7 @@
 package fi.haagahelia.quizzer.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import fi.haagahelia.quizzer.model.Question;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
