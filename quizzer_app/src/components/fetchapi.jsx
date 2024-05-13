@@ -121,7 +121,7 @@ export function getQuizzById(quizzId){
 
 	const fetchQuizzById = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/quizzer/quizz/${quizzId}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzer/quizz/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok: " + response.statusText);
 			}
@@ -140,7 +140,7 @@ export function useGetReviews(quizzId) {
 	const [reviews, setReviews] = useState([]);
 	const fetchReviews = async () => {
 		try {
-			const response = await fetch(`${BACKEND_URL}/api/review/allreviews/${quizzId}`);
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/review/allreviews/${quizzId}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok" + response.statusText);
 			}

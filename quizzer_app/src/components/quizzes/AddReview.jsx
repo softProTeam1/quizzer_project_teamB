@@ -21,7 +21,7 @@ function AddReview() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/review/add", {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/review/add`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
