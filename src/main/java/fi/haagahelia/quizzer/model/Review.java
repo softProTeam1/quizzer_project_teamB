@@ -1,7 +1,6 @@
 package fi.haagahelia.quizzer.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,9 +11,6 @@ import jakarta.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 public class Review {
