@@ -45,7 +45,7 @@ public class AnswerRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid request body, answer text cannot be blank");
         }
-        //handle if question id is not found
+        // handle if question id is not found
         Question question = questionRepository.findById(answerRequestDto.getQuestionId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "question with question id does not exist"));
         // handle quiz id not found
@@ -54,14 +54,14 @@ public class AnswerRestController {
 
         // handle quizz not publish
         if (!quiz.getStatus().getStatus()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz with the provided id is not published");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Quiz with the provided id is not published");
         }
 
         Answer answer = new Answer(answerRequestDto.getAnswerText(), answerRequestDto.getCorrectness());
         answer.setQuestion(question);
 
         return answerRepository.save(answer);
-    
+
     }
 
     @Operation(summary = "Get a answer by quiz ID", description = "Returns answers of a quiz by quiz ID or an appropriate error message if not found or unpublished")
@@ -89,7 +89,7 @@ public class AnswerRestController {
         List<Answer> answers = answerRepository.findByQuestionQuizz(quizz);
 
         return answers;
-}
+    }
 
     @Operation(summary = "Get correct answer by question ID", description = "Returns an answer by question ID or an appropriate error message if not found or unpublished")
     @ApiResponses(value = {
@@ -102,12 +102,10 @@ public class AnswerRestController {
     public String getCorrectAnswerByQuestionId(@PathVariable Long questionId) {
         // get the answer by questionId
         Question question = questionRepository.findById(questionId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error: Question with the provided ID does not exist"));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Error: Question with the provided ID does not exist"));
 
         return question.getCorrectAnswer();
     }
-
-
-    
 
 }
