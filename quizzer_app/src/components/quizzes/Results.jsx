@@ -11,7 +11,7 @@ import {useParams} from "react-router-dom";
 export default function Results() {
     //getting the quizzId from the URL
     let { quizzId } = useParams();
-    const { questions, fetchAnswersById } = useGetAnswerById();
+    const { questions, fetchAnswersById } = useGetAnswerById(quizzId);
     const { quiz, fetchQuiz} = getQuizById(quizzId);
     const [answerStats, setAnswerStats] = useState({
         totalAnswers: 0,
