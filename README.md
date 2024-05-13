@@ -58,6 +58,20 @@ flowchart TB
 
 - URL: https://quizzer-project-teamb-1-alm3.onrender.com
 
+### Test Instruction
+We run tests in Java Spring Boot using JUnit following the Arrange-Act-Assert pattern:
+
+- Arrange: Set up the test environment, including creating objects and initializing variables. This is the preparation phase.
+- Act: Execute the method or functionality being tested. This is the action phase where you trigger the behavior you want to test.
+- Assert: Verify that the outcome of the test is as expected. This involves checking the results or state of the system to ensure it matches the expected behavior.
+
+Here's how to run the tests:
+
+1. Make sure you have your project set up with Spring Boot and JUnit dependencies.
+2. Place your test classes in the src/test/java directory.
+3. Right-click on your test class or method, then select "Run As" > "JUnit Test" from your IDE's context menu.
+Alternatively, you can run the tests for the project either in Eclipse or by running the ./mvnw test command in Git Bash.
+
 ## Generate a JAR file for the application and run the application using the JAR file
 
 - Use the command: ./mvnw package
