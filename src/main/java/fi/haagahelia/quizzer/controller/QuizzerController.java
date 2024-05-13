@@ -2,28 +2,20 @@ package fi.haagahelia.quizzer.controller;
 
 import fi.haagahelia.quizzer.model.Quizz;
 import fi.haagahelia.quizzer.model.Status;
-import fi.haagahelia.quizzer.model.User;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
-import fi.haagahelia.quizzer.repository.SignupForm;
 import fi.haagahelia.quizzer.repository.StatusRepository;
-import fi.haagahelia.quizzer.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,8 +30,6 @@ public class QuizzerController {
     private StatusRepository statusRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     // show all quizzes
     @RequestMapping(value = "/quizzlist")
