@@ -13,7 +13,6 @@ Another for students to take different quizzes.
 - Blazej Goszczynski, Github link:<https://github.com/Blazej3>
 - Hong Phan, Github link:<https://github.com/Janphan>
 - Thien Nguyen, Github link:<https://github.com/makotosoul>
-- Vermilion Sovern (Nojus Klimovas), Github link:<https://github.com/Veyefill>
 
 ## Architecture
 
@@ -86,70 +85,110 @@ erDiagram
     QUIZZ ||--o{ QUESTION : includes
     QUIZZ }o--|| STATUS : has
     QUESTION }|--|| DIFFICULTY : has
+    QUESTION }|--|| ANSWER : has
+    QUIZZ }|--|| REVIEW : has
+    USER }o--|| QUIZZ : has
 
     CATEGORIES {
-        int categoryId PK
+        Long categoryId PK
         string name
         string description
     }
 
     QUIZZ {
-        int quizId PK
+        Long quizId PK
         string name
         string description
         Instant createdAt
-        int statusId FK
-        int categoryId FK
+        Long statusId FK
+        Long categoryId FK
     }
 
     QUESTION {
-        int questionId PK
+        Long questionId PK
         string questionText
         string correctAnswer
         int difficultyId
     }
 
     STATUS {
-        int statusId PK
+        Long statusId PK
         boolean status
     }
 
     DIFFICULTY {
-        int difficultyId PK
+        Long difficultyId PK
         string level
     }
+    
+    ANSWER {
+        Long answerId PK
+        string answerText
+        boolean correctness
+        Long questionId FK
+    }
+    REVIEW {
+        Long reviewId PK
+        string nickname
+        string reviewText
+        Instant reviewTime
+        Long quizzId FK
+    }
+    
+    USER {
+    Long id PK
+    String username
+    String passwordHash
+    String role
+    }
+    
 ```
 
 ## Frontend Deployment Instructions
+
 1. Environment Setup:
+
 - In the frontend folder of your project, add a .env file for the development environment.
-- Define the VITE_BACKEND_URL environment variable with the URL of the backend's development environment. For example:'VITE_BACKEND_URL=http://localhost:8080'
+- Define the VITE_BACKEND_URL environment variable with the URL of the backend's development environment. For example:'
+  VITE_BACKEND_URL=http://localhost:8080'
 - Make sure that every fetch function call in your code uses this environment variable as the URL prefix.
 
 2. Prepare for Production:
+
 - Create a .env.production file in the frontend folder.
-- Define the VITE_BACKEND_URL environment variable with the URL of the backend's production environment. For example:'VITE_BACKEND_URL=https://quizzer-project-teamb-wbwh.onrender.com'
+- Define the VITE_BACKEND_URL environment variable with the URL of the backend's production environment. For example:'
+  VITE_BACKEND_URL=https://quizzer-project-teamb-wbwh.onrender.com'
 - Replace https://quizzer-project-teamb-wbwh.onrender.com with the actual URL of your backend's production environment.
 
 3. Push Changes to GitHub:
+
 - Commit and push these changes to your GitHub repository.
 
 4. Setup Render:
+
 - Sign in to Render using your GitHub account.
 - Create a PostgreSQL database instance in the Render dashboard if you haven't already.
 - Copy the values for “Username”, “Password”, and “Internal Database URL” in the Connections section for later use.
 
 5. Deployment on Render:
+
 - On the Render dashboard, click the “New” button and choose “Static Site”.
 - Select your project’s repository from the repository list and click the “Connect” button.
-- Choose a name for the service. If the frontend application is not initialized in the repository’s root folder, set “Root Directory” as the folder’s name.
+- Choose a name for the service. If the frontend application is not initialized in the repository’s root folder, set
+  “Root Directory” as the folder’s name.
 - Set “Build Command” as npm run build and “Publish Directory” as dist.
 - Click the “Advanced” button and set “Auto-Deploy” as “Yes” and “Branch” as “production”.
 - Click the “Create Static Site” button to create the service.
 
 6. Routing Configuration:
+
 - On the service’s page, navigate to “Redirects/Rewrites” from the left-hand side navigation menu.
 - Set the “Source” as /*, “Destination” as /index.html, and “Action” as “Rewrite”.
--Click the “Save Changes” button.
+  -Click the “Save Changes” button.
 
-Following these steps will deploy the frontend of Quizzer on Render, allowing users to access the application through the specified URL.
+Following these steps will deploy the frontend of Quizzer on Render, allowing users to access the application through
+the specified URL.
+
+## License
+
+React is [MIT Licensed](./LICENSE.txt)

@@ -21,10 +21,6 @@ import {
 } from "@mui/material";
 import {useParams} from "react-router-dom";
 
-function ExpandMoreIcon() {
-	return null;
-}
-
 function QuestionList() {
 	//for stack bar to work *STARTING HERE*
 	const [state, setState] = React.useState({

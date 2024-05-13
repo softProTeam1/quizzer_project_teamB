@@ -8,6 +8,8 @@ import Tab from "@mui/material/Tab";
 import PublishedQuizz from "./components/student/PublishedQuizz";
 import QuestionList from "./components/student/QuestionList.jsx";
 import Results from "./components/quizzes/Results.jsx";
+import Reviews from "./components/quizzes/Reviews.jsx";
+import AddReview from "./components/quizzes/AddReview.jsx";
 
 function App() {
 	const [value, setValue] = React.useState("one");
@@ -30,6 +32,8 @@ function App() {
 				<Route path="/" exact Component={PublishedQuizz} />
 				<Route path="/questions/:quizzId" exact Component={QuestionList} />
 				<Route path="/quizzer/quizz/:quizzId" exact Component={Results} />
+				<Route path="/quizzer/reviews/quizz/:quizzId" exact Component={Reviews} />
+				<Route path="/quizzer/addreview/quizz/:quizzId" exact Component={AddReview} />
 			</Routes>
 		</BrowserRouter>
 	);

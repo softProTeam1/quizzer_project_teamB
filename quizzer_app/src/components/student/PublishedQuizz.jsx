@@ -88,6 +88,21 @@ function PublishedQuizz() {
 				);
 			}
 
+		},
+		{
+			cellRenderer: (params) => {
+				const link = `/quizzer/reviews/quizz/${params.data.quizzId}`;
+				return (
+					<div>
+						<Link to={link}>
+							<Button >
+								See Reviews
+							</Button>
+						</Link>
+					</div>
+				);
+			}
+
 		}
 	]);
 	return (

@@ -6,6 +6,7 @@ import fi.haagahelia.quizzer.model.Status;
 import fi.haagahelia.quizzer.repository.CategoryRepository;
 import fi.haagahelia.quizzer.repository.QuizzRepository;
 import fi.haagahelia.quizzer.repository.StatusRepository;
+import fi.haagahelia.quizzer.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,11 +33,22 @@ public class QuizzerRestController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // show all quizzes
     @GetMapping("")
     public List<Quizz> showAllQuizz() {
         return (List<Quizz>) quizzRepository.findAll();
     }
+
+    @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
+    @ApiResponses(value = {
+            // The responseCode property defines the HTTP status code of the response
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the quiz"),
+            @ApiResponse(responseCode = "400", description = "The quiz with the provided ID is not published"),
+            @ApiResponse(responseCode = "404", description = "Quiz with the provided ID does not exist")
+    })
 
     // list quiz by Id
     @Operation(summary = "Get a quiz by ID", description = "Returns a quiz by its ID or an appropriate error message if not found or unpublished")
