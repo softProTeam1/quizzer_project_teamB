@@ -157,6 +157,22 @@ erDiagram
     }
     
 ```
+### Description:
+- CATEGORIES: This entity represents the different categories of quizzes available in the application. Each category is identified by a unique categoryId and has a name and description. Each category can contain multiple quizzes, establishing a one-to-many relationship with the QUIZZ entity.
+
+- USER: This entity represents the users of the application. Each user is identified by a unique userId and has a username, passwordHash, and role. A user can submit multiple answers and reviews, establishing a one-to-many relationship with the ANSWER and REVIEW entities.
+
+- QUIZZ: This entity represents the quizzes in the application. Each quiz is identified by a unique quizzId and has a name, description, createdAt timestamp, statusId, and categoryId. A quiz belongs to one category and has one status, establishing a one-to-one relationship with the CATEGORIES and STATUS entities. Also, a quiz contains multiple questions and can have multiple reviews, establishing a one-to-many relationship with the QUESTION and REVIEW entities.
+
+- QUESTION: This entity represents the questions in a quiz. Each question is identified by a unique questionId and has a questionText, correctAnswer, and difficultyId. A question belongs to one quiz and has one difficulty level, establishing a one-to-one relationship with the QUIZZ and DIFFICULTY entities. Also, a question can have multiple answers, establishing a one-to-many relationship with the ANSWER entity.
+
+- STATUS: This entity represents the status of a quiz. Each status is identified by a unique statusId and has a status boolean. A status can belong to multiple quizzes, establishing a one-to-many relationship with the QUIZZ entity.
+
+- REVIEW: This entity represents the reviews given by users for a quiz. Each review is identified by a unique reviewId and has a reviewText, rating, and quizzId. A review belongs to one user and one quiz, establishing a one-to-one relationship with the USER and QUIZZ entities.
+
+- DIFFICULTY: This entity represents the difficulty level of a question. Each difficulty level is identified by a unique difficultyId and has a level. A difficulty level can belong to multiple questions, establishing a one-to-many relationship with the QUESTION entity.
+
+- ANSWER: This entity represents the answers given by users for a question. Each answer is identified by a unique answerId and has an answerText, correctness boolean, and questionId. An answer belongs to one user and one question, establishing a one-to-one relationship with the USER and QUESTION entities.
 
 ## Frontend Deployment Instructions
 
